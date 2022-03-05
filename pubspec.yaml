@@ -1,0 +1,37 @@
+name: boeoeg_app
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: 
+  cupertino_calendar: ^1.0.0
+  http: ^0.13.4
+  hive_flutter:
+  
+  path_provider: ^2.0.9
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: 
+  
+  flutter_lints: ^1.0.0
+
+flutter_icons:
+  image_path: "images/bild.jpg"
+  android: false
+  ios: true
+
+flutter:
+
+  uses-material-design: true
