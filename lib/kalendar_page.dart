@@ -50,8 +50,7 @@ class _KalendarClassState extends State<KalendarClass> {
           "http://t0orznhg4raqbvfi.myfritz.net:43333/loadalltermine/");
 
       http.Response response = await http.get(dataURL);
-
-      var data = jsonDecode(response.body);
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
 
       setState(() {
         transferdata(data);
@@ -80,12 +79,14 @@ class _KalendarClassState extends State<KalendarClass> {
           color: Theme.of(context).dividerColor,
         )),
       ),
-      child: ListView.builder(
-        itemCount: _termine.orders.length,
-        itemBuilder: (BuildContext ctxt, int index) {
-          return KalendarItem(actTermin: _termine.orders[index]);
-        },
-      ),
+      child: _termine.orders.isNotEmpty
+          ? ListView.builder(
+              itemCount: _termine.orders.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+                return KalendarItem(actTermin: _termine.orders[index]);
+              },
+            )
+          : Center(child: const Text("Bitte Internetverbindung überprüfen")),
     );
   }
 }

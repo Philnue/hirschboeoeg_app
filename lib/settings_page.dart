@@ -1,9 +1,6 @@
 import 'package:boeoeg_app/widgets/name_field.dart';
 import "package:flutter/cupertino.dart";
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

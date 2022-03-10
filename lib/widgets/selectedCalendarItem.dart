@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:boeoeg_app/classes/termine.dart';
+import 'package:boeoeg_app/widgets/iconwithtext.dart';
+import 'package:boeoeg_app/widgets/notizwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,67 +16,64 @@ class SelectedCalendarItem extends StatefulWidget {
 
 class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
   bool initvalue = false;
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Termin;
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(args.name),
-        trailing: Text(args.datumConvertedInGerman),
+        middle: Text(
+          args.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+          ),
+        ),
       ),
-      child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      child: SafeArea(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          IconWithText(
+            icon: CupertinoIcons.clock,
+            width: 15,
+            text: args.uhrzeit,
+            textSize: 30,
+          ),
+          IconWithText(
+            icon: CupertinoIcons.calendar,
+            width: 15,
+            text: args.datumConvertedInGerman,
+            textSize: 30,
+          ),
+          IconWithText(
+            icon: CupertinoIcons.placemark,
+            width: 15,
+            text: args.treffpunkt,
+            textSize: 30,
+          ),
+          IconWithText(
+            icon: CupertinoIcons.briefcase,
+            width: 15,
+            text: args.kleidung,
+            textSize: 30,
+          ),
+          IconWithText(
+            icon: CupertinoIcons.placemark_fill,
+            width: 15,
+            text: args.adresse,
+            textSize: 30,
+          ),
+          args.notizen.length > 1
+              ? NotizWidget(text: args.notizen)
+              : Container(),
           Row(
             children: [
-              Icon(
-                CupertinoIcons.placemark,
-                size: 30,
-              ),
-              Text(
-                args.treffpunkt,
+              const Text(
+                "Nehme ich teil ?",
                 style: TextStyle(fontSize: 28),
               ),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(
-                CupertinoIcons.briefcase,
-                size: 30,
-              ),
-              Text(
-                args.kleidung,
-                style: TextStyle(fontSize: 28),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(
-                CupertinoIcons.placemark_fill,
-                size: 30,
-              ),
-              Text(
-                args.adresse,
-                style: TextStyle(fontSize: 28),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(
-                CupertinoIcons.text_justify,
-                size: 30,
-              ),
-              Text(
-                args.notizen,
-                style: TextStyle(fontSize: 28),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text("Nehme ich teil ?"),
               CupertinoSwitch(
                   value: initvalue,
                   onChanged: (value) => {
@@ -83,8 +84,8 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
             ],
           ),
           Text("Liste allter Teilnahmen")
-        ]),
-      ),
+        ],
+      )),
     );
   }
 }

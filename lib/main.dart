@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox('settings');
+
   runApp(MyApp());
 }
 
@@ -65,6 +66,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       title: MyApp._title,
       theme: _brightness == Brightness.dark ? _darkTheme : _lightTheme,
       home: const MyHomePage(),
+      //home: Hive.box("settings").get("regist") == null          ? Center(              child: Text("Bitte Registrieren"),            )          : MyHomePage(),
+
       routes: {
         //'/': (context) => const FirstScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.

@@ -29,10 +29,10 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(CupertinoIcons.calendar),
             label: 'Kalender',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.check_mark),
-            label: 'Abstimmung',
-          ),
+          //BottomNavigationBarItem(
+          //  icon: Icon(CupertinoIcons.check_mark),
+          //  label: 'Abstimmung',
+          //),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.settings),
             label: 'Einstellungen/V',
@@ -48,11 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
           case 0:
             return KalendarClass();
           case 1:
-            break;
-          case 2:
             return SettingsPage();
-          case 3:
+          case 2:
             return InfoPage();
+          //case 3:
+          // break;
           default:
             break;
         }

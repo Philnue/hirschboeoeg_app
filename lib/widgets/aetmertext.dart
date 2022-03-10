@@ -11,10 +11,7 @@ class AemterText extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.left,
-      style: TextStyle(
-          color: CupertinoColors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.normal),
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
     );
   }
 }
