@@ -42,26 +42,35 @@ class KalendarItem extends StatelessWidget {
             padding: const EdgeInsets.all(3.0),
 
             //If einbauen wenn des datum heute oder morgen
-            child: Column(
-              children: [
-                Text(
-                  months[int.parse(actTermin.getDateCorrectly.substring(3, 5)) -
-                      1],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  actTermin.getDateCorrectly.substring(0, 2),
-                  //actTermin.getDateCorrectly,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-              ],
-            )),
+            child: actTermin.getDateCorrectly.length == 10
+                ? Column(
+                    children: [
+                      Text(
+                        months[int.parse(
+                                actTermin.getDateCorrectly.substring(3, 5)) -
+                            1],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        actTermin.getDateCorrectly.substring(0, 2),
+                        //actTermin.getDateCorrectly,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    actTermin.getDateCorrectly,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
         title: Text(
           //Mittler Text Name
           actTermin.name,
@@ -98,8 +107,14 @@ class KalendarItem extends StatelessWidget {
             size: 30,
           ),
           onPressed: () {
-            Navigator.of(context).pushNamed(SelectedCalendarItem.routeName,
-                arguments: actTermin);
+            //Navigator.of(context).pushNamed(SelectedCalendarItem.routeName,                arguments: actTermin);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SelectedCalendarItem(
+                        termin: actTermin,
+                      )),
+            );
           },
         ),
       ),

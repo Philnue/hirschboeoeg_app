@@ -1,3 +1,5 @@
+import 'package:boeoeg_app/classes/format.dart';
+import 'package:boeoeg_app/classes/httpHelper.dart';
 import 'package:boeoeg_app/widgets/kalendaritem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:convert' show utf8;
 import 'classes/termine.dart';
+import 'classes/constants.dart' as consts;
 
 class KalendarClass extends StatefulWidget {
   const KalendarClass({Key? key}) : super(key: key);
@@ -25,46 +28,28 @@ class _KalendarClassState extends State<KalendarClass> {
     loadData();
   }
 
-  void transferdata(List<dynamic> list) {
+  void transferdata(List<Termin> list) {
     if (list.isNotEmpty) {
       for (var item in list) {
         allEntries.add(item);
 
-        _termine.addTermin(Termin(
-            id: item["id"],
-            name: item["name"],
-            datum: item["datum"],
-            adresse: item["adresse"],
-            uhrzeit: item["uhrzeit"].toString(),
-            notizen: item["notizen"],
-            treffpunkt: item["treffpunkt"],
-            kleidung: item["kleidung"]));
+        _termine.addTermin(item);
       }
     }
   }
 
   void loadData() async {
     try {
-      //Uri dataURL = Uri.parse("http://192.168.178.67:7777/loadalltermine/");
-      Uri dataURL = Uri.parse(
-          "http://t0orznhg4raqbvfi.myfritz.net:43333/loadalltermine/");
-
-      http.Response response = await http.get(dataURL);
-      var data = jsonDecode(utf8.decode(response.bodyBytes));
+      HttpHelper httpHelper = HttpHelper();
+      var data =
+          await httpHelper.loadAllTermine(consts.Constants.loadAllTermine);
 
       setState(() {
         transferdata(data);
       });
     } catch (_) {
-      print("API load error" + _.toString());
+      print("API load error " + _.toString());
     }
-  }
-
-  String currentDate() {
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('dd.MM.yyyy');
-    final String formatted = formatter.format(now);
-    return formatted;
   }
 
   @override
@@ -72,7 +57,7 @@ class _KalendarClassState extends State<KalendarClass> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
-          "Kalender " + currentDate(),
+          "Kalender " + Format.currentDate(),
         ),
         border: Border(
             bottom: BorderSide(

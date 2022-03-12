@@ -33,7 +33,7 @@ class Termin {
         .substring(0, 10);
 
     if (today == datum) {
-      return "Heute";
+      return "Heute ";
     }
     if (tomorrow == datum) {
       return "Morgen";

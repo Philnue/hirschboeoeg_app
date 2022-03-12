@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
           color: Theme.of(context).primaryColor,
         )),
       ),
-      child: Center(
+      child: SafeArea(
         child: NamefieldWidget(),
       ),
     );

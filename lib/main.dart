@@ -1,4 +1,6 @@
 import 'package:boeoeg_app/MyHomePage.dart';
+import 'package:boeoeg_app/classes/constants.dart';
+import 'package:boeoeg_app/classes/httpHelper.dart';
 import 'package:boeoeg_app/widgets/selectedCalendarItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +10,24 @@ import 'package:hive_flutter/hive_flutter.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox('settings');
+  HttpHelper httpHelper = HttpHelper();
+  String name = await Hive.box("settings").get("name");
+
+  if (name == null) {
+    name = "1 2";
+  }
+
+  var vorname = name.split(" ")[0];
+  var nachname = name.split(" ")[1];
+
+  if (name != null) {
+    int crrId = await httpHelper
+        .loadMitliedIdByName(Constants.getMitliedById + "$vorname,$nachname");
+    await Hive.box("settings").put("id", crrId);
+    print("crrPerson = $crrId ");
+  } else {
+    await Hive.box("settings").put("id", 0);
+  }
 
   runApp(MyApp());
 }
@@ -71,8 +91,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       routes: {
         //'/': (context) => const FirstScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        SelectedCalendarItem.routeName: (context) =>
-            const SelectedCalendarItem(),
+        // SelectedCalendarItem.routeName: (context) =>            const SelectedCalendarItem(),
       },
     );
   }
