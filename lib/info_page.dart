@@ -1,11 +1,6 @@
 import 'package:boeoeg_app/widgets/aemter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'classes/termine.dart';
-import 'package:hive/hive.dart';
-
-import 'dart:io';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -36,7 +31,7 @@ class _InfoPageState extends State<InfoPage> {
           width: double.infinity,
           child: ListView(
             children: [
-              AemterWidget(),
+              const AemterWidget(),
             ],
           ),
         ));

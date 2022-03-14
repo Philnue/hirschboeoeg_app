@@ -1,19 +1,15 @@
-import 'dart:convert';
-
-import 'package:boeoeg_app/classes/constants.dart';
-import 'package:boeoeg_app/classes/httpHelper.dart';
 import 'package:boeoeg_app/classes/termine.dart';
+import 'package:boeoeg_app/widgets/allTerminZusagen.dart';
 import 'package:boeoeg_app/widgets/iconwithtext.dart';
 import 'package:boeoeg_app/widgets/notizwidget.dart';
+import 'package:boeoeg_app/widgets/futureBuilderSwitch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class SelectedCalendarItem extends StatefulWidget {
-  const SelectedCalendarItem({Key? key, required this.termin})
-      : super(key: key);
+  const SelectedCalendarItem({Key? key}) : super(key: key);
   static const routeName = '/selectedCalendarItem';
-  final Termin termin;
+
   @override
   State<SelectedCalendarItem> createState() => _SelectedCalendarItemState();
 }
@@ -30,25 +26,6 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Termin;
 
-    Future<bool> test() async {
-      HttpHelper tt = HttpHelper();
-      id = Hive.box("settings").get("id");
-      var m = await tt.getTerminAbstimmungByPersonAndTermin(
-        path: Constants.getTerminAbstimmungByMitgliedAnTermin,
-        terminId: args.id,
-        mitgliedId: id,
-      );
-
-      return m;
-    }
-
-    bool test2() {
-      var t = test();
-
-      return test();
-    }
-
-    HttpHelper httpHelper = HttpHelper();
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
@@ -61,7 +38,6 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
       ),
       child: SafeArea(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           IconWithText(
             icon: CupertinoIcons.clock,
@@ -94,42 +70,39 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
             textSize: 30,
           ),
           args.notizen.length > 1
-              ? NotizWidget(text: args.notizen)
+              ? NotizWidget(
+                  text: args
+                      .notizen) //! einbauen mit button zum vergrößern vllt so nen toast boxwie mit namen
               : Container(),
-          Row(
-            children: [
-              const Text(
-                "Nehme ich teil ?",
-                style: TextStyle(fontSize: 28),
-              ),
-              CupertinoSwitch(
-                  value: httpHelper.getTerminAbstimmungByPersonAndTermin(
-                      path: Constants.getTerminAbstimmungByMitgliedAnTermin,
-                      terminId: args.id,
-                      mitgliedId: id) as bool,
-                  onChanged: (value) => {
-                        setState(() {
-                          initvalue = value;
-                          int id = Hive.box("settings").get("id");
-
-                          HttpHelper httpHelper = HttpHelper();
-                          var m =
-                              httpHelper.getTerminAbstimmungByPersonAndTermin(
-                                  path: Constants
-                                      .getTerminAbstimmungByMitgliedAnTermin,
-                                  terminId: args.id,
-                                  mitgliedId: id);
-
-                          httpHelper.addTerminAbstimmung(
-                              path: Constants.addTerminAbstimmung,
-                              terminId: args.id,
-                              mitgliedId: id,
-                              entscheidung: value);
-                        })
-                      }),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 7,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Nehme ich teil ?",
+                  style: TextStyle(fontSize: 28),
+                ),
+                FutureBuilderSwitch(actTermin: args),
+              ],
+            ),
           ),
-          Text("Liste allter Teilnahmen")
+          const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Text(
+              "Liste aller Teilnehmer :",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: AllTerminZusagenView(id: args.id),
+          ),
         ],
       )),
     );

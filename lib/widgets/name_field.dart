@@ -39,8 +39,8 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Text("Vorname Nachname"),
-          SizedBox(
+          const Text("Vorname Nachname"),
+          const SizedBox(
             height: 10,
           ),
           CupertinoTextField(
@@ -65,28 +65,22 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
                   var nachname = datatext[1];
 
                   httpHelper.updateMitlied(
-                      path: Constants.updateMitlied,
-                      crrid: _id,
-                      vorname: vorname,
-                      nachname: nachname);
+                      crrid: _id, vorname: vorname, nachname: nachname);
                 } else {
                   var datatext = _textController.text.split(" ");
                   var vorname = datatext[0];
                   var nachname = datatext[1];
-                  httpHelper.addMitlied(
-                      path: Constants.addMitlied,
-                      vorname: vorname,
-                      nachname: nachname);
+                  httpHelper.addMitlied(vorname: vorname, nachname: nachname);
 
                   showCupertinoDialog(
                       context: context,
                       builder: (BuildContext context) => CupertinoAlertDialog(
-                            title: Text("Hinzufügen der Person"),
+                            title: const Text("Hinzufügen der Person"),
                             content: Text(
                                 "Ihr Name $vorname $nachname wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut"),
                             actions: [
                               CupertinoDialogAction(
-                                child: Text("Ok"),
+                                child: const Text("Ok"),
                                 onPressed: () {
                                   Navigator.pop(context);
                                   exit(0);
@@ -97,7 +91,7 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
                 }
               });
             },
-            prefix: Icon(CupertinoIcons.person),
+            prefix: const Icon(CupertinoIcons.person),
           ),
         ],
       ),

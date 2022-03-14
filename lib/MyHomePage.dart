@@ -2,9 +2,6 @@ import 'package:boeoeg_app/info_page.dart';
 import 'package:boeoeg_app/kalendar_page.dart';
 import 'package:boeoeg_app/settings_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -46,17 +43,17 @@ class _MyHomePageState extends State<MyHomePage> {
       tabBuilder: (BuildContext context, int index) {
         switch (index) {
           case 0:
-            return KalendarClass();
+            return const KalendarClass();
           case 1:
-            return SettingsPage();
+            return const SettingsPage();
           case 2:
-            return InfoPage();
+            return const InfoPage();
           //case 3:
           // break;
           default:
             break;
         }
-        return Text("");
+        return const Text("Fehler");
       },
     );
   }

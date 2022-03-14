@@ -1,14 +1,10 @@
-import "constants.dart" as consts;
-
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:boeoeg_app/classes/constants.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show utf8;
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'termine.dart';
 
 class HttpHelper {
+  //! ändern
   Future<List<Termin>> loadAllTermine(String path) async {
     try {
       Uri dataURL = Uri.parse(path);
@@ -37,6 +33,7 @@ class HttpHelper {
     }
   }
 
+  //! ändern
   Future<int> loadMitliedIdByName(String path) async {
     try {
       Uri dataURL = Uri.parse(path);
@@ -59,12 +56,12 @@ class HttpHelper {
   }
 
   Future<String> updateMitlied(
-      {required String path,
-      required int crrid,
+      {required int crrid,
       required String vorname,
       required String nachname}) async {
     try {
-      String convertedPath = path + "$crrid,$vorname,$nachname";
+      String convertedPath =
+          Constants.updateMitlied + "$crrid,$vorname,$nachname";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -79,11 +76,9 @@ class HttpHelper {
   }
 
   Future<String> addMitlied(
-      {required String path,
-      required String vorname,
-      required String nachname}) async {
+      {required String vorname, required String nachname}) async {
     try {
-      String convertedPath = path + "$vorname,$nachname";
+      String convertedPath = Constants.addMitlied + "$vorname,$nachname";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -98,13 +93,13 @@ class HttpHelper {
   }
 
   Future<String> addTerminAbstimmung({
-    required String path,
     required int terminId,
     required int mitgliedId,
-    required bool entscheidung,
+    required int entscheidung,
   }) async {
     try {
-      String convertedPath = path + "$terminId,$mitgliedId,$entscheidung";
+      String convertedPath =
+          Constants.addTerminAbstimmung + "$terminId,$mitgliedId,$entscheidung";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -119,25 +114,28 @@ class HttpHelper {
   }
 
   Future<bool> getTerminAbstimmungByPersonAndTermin({
-    required String path,
     required int terminId,
     required int mitgliedId,
   }) async {
     try {
-      String convertedPath = path + "$terminId,$mitgliedId";
+      String convertedPath = Constants.getTerminAbstimmungByMitgliedAnTermin +
+          "$mitgliedId,$terminId";
 
       Uri dataURL = Uri.parse(convertedPath);
 
       http.Response response = await http.get(dataURL);
 
-      String data = jsonDecode(utf8.decode(response.bodyBytes));
+      List data = jsonDecode(utf8.decode(response.bodyBytes));
 
-      if (data == "true") {
-        return true;
+      if (data.isNotEmpty) {
+        if (data[0]["entscheidung"] == 1) {
+          return true;
+        }
+        if (data[0]["entscheidung"] == 0) {
+          return false;
+        }
       }
-      if (data == "false") {
-        return false;
-      }
+
       return false;
       //return data;
     } catch (_) {
@@ -146,13 +144,14 @@ class HttpHelper {
   }
 
   Future<String> updateTerminAbstimmungByPersonAndTermin({
-    required String path,
     required int terminId,
     required int mitgliedId,
     required bool entscheidung,
   }) async {
     try {
-      String convertedPath = path + "$terminId,$mitgliedId, $entscheidung";
+      String convertedPath =
+          Constants.updateTerminAbstimmungByMitgliedAnTermin +
+              "$terminId,$mitgliedId, $entscheidung";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -161,6 +160,56 @@ class HttpHelper {
       String data = jsonDecode(utf8.decode(response.bodyBytes));
 
       return data;
+    } catch (_) {
+      throw ("API load error" + _.toString());
+    }
+  }
+
+  Future<String> deleteTerminAbstimmung({
+    required int terminId,
+    required int mitgliedId,
+  }) async {
+    try {
+      String convertedPath =
+          Constants.deleteTerminAbstimmung + "$mitgliedId,$terminId";
+
+      Uri dataURL = Uri.parse(convertedPath);
+
+      http.Response response = await http.get(dataURL);
+
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      return data;
+    } catch (_) {
+      throw ("API load error" + _.toString());
+    }
+  }
+
+  Future<List<String>> loadTerminAbstimmugPersonsByTerminId({
+    required int terminId,
+  }) async {
+    try {
+      String convertedPath =
+          Constants.loadAllTerminAbstimmungByTermin + "$terminId";
+
+      Uri dataURL = Uri.parse(convertedPath);
+
+      http.Response response = await http.get(dataURL);
+
+      var data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+      List<String> s = [];
+
+      for (var t in data) {
+        String m = "";
+
+        m += t["vorname"];
+        m += " ";
+        m += t["nachname"];
+
+        s.add(m);
+      }
+
+      return s;
     } catch (_) {
       throw ("API load error" + _.toString());
     }

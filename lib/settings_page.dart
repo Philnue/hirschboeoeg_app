@@ -10,22 +10,11 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late TextEditingController _textController;
-  TextEditingController controller =
-      new TextEditingController(text: "Codesinsider.com");
-  @override
-  void initState() {
-    super.initState();
-    //_textController = TextEditingController(text: 'initial text');
-
-    //loadPrefs();
-  }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(
+        middle: const Text(
           "Einstellungen ",
         ),
         border: Border(
@@ -33,7 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
           color: Theme.of(context).primaryColor,
         )),
       ),
-      child: SafeArea(
+      child: const SafeArea(
         child: NamefieldWidget(),
       ),
     );

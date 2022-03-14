@@ -14,7 +14,7 @@ class _AemterWidgetState extends State<AemterWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           "Ämter:",
           style: TextStyle(
               fontSize: 30,
@@ -29,8 +29,8 @@ class _AemterWidgetState extends State<AemterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AemterText(text: "Alpha:"),
-                  AemterText(
+                  const AemterText(text: "Alpha:"),
+                  const AemterText(
                     text: "Daniel Lauer",
                   ),
                 ],
@@ -65,12 +65,34 @@ class _AemterWidgetState extends State<AemterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AemterText(text: "KA:"),
-                  AemterText(
-                    text: "Gute Frage",
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Alpha :",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Daniel Lauer",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  )
                 ],
-              ),
+              )
             ],
           ),
         )

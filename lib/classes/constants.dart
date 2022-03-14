@@ -22,4 +22,10 @@ class Constants {
   static const String updateTerminAbstimmungByMitgliedAnTermin =
       fritzBoxConnection +
           "TerminAbstimmung/updateterminabstimmungbyterminidandmitgliedid/";
+
+  static const String deleteTerminAbstimmung =
+      fritzBoxConnection + "TerminAbstimmung/deleteterminabstimmung/";
+
+  static const String loadAllTerminAbstimmungByTermin =
+      fritzBoxConnection + "TerminAbstimmung/loadAllTerminZusagenByTerminId/";
 }

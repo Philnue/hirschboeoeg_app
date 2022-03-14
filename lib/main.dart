@@ -11,14 +11,15 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('settings');
   HttpHelper httpHelper = HttpHelper();
-  String name = await Hive.box("settings").get("name");
+  String? name = await Hive.box("settings").get("name");
 
-  if (name == null) {
-    name = "1 2";
-  }
-
-  var vorname = name.split(" ")[0];
-  var nachname = name.split(" ")[1];
+  //! ändern
+  // if (name == null) {
+  //  name = "1 2";
+  // }
+  //! testen
+  var vorname = name?.split(" ")[0];
+  var nachname = name?.split(" ")[1];
 
   if (name != null) {
     int crrId = await httpHelper
@@ -91,7 +92,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       routes: {
         //'/': (context) => const FirstScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        // SelectedCalendarItem.routeName: (context) =>            const SelectedCalendarItem(),
+        SelectedCalendarItem.routeName: (context) =>
+            const SelectedCalendarItem(),
       },
     );
   }

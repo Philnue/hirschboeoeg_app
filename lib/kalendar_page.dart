@@ -3,11 +3,6 @@ import 'package:boeoeg_app/classes/httpHelper.dart';
 import 'package:boeoeg_app/widgets/kalendaritem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cupertino_calendar/cupertino_calendar.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'dart:convert' show utf8;
 import 'classes/termine.dart';
 import 'classes/constants.dart' as consts;
 
@@ -71,7 +66,7 @@ class _KalendarClassState extends State<KalendarClass> {
                 return KalendarItem(actTermin: _termine.orders[index]);
               },
             )
-          : Center(child: const Text("Bitte Internetverbindung überprüfen")),
+          : const Center(child: Text("Bitte Internetverbindung überprüfen")),
     );
   }
 }
