@@ -1,4 +1,5 @@
 import 'package:boeoeg_app/widgets/aemter.dart';
+import 'package:boeoeg_app/widgets/mitgliederView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,11 +28,15 @@ class _InfoPageState extends State<InfoPage> {
             ),
           ),
         ),
-        child: Container(
-          width: double.infinity,
-          child: ListView(
+        child: SafeArea(
+          child: Column(
             children: [
               const AemterWidget(),
+              Text("Alle Mitglieder"),
+              MitgliederView(
+                fontsize: 15,
+                padding: 3,
+              ),
             ],
           ),
         ));

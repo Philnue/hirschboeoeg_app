@@ -1,4 +1,6 @@
-import 'package:boeoeg_app/widgets/aetmertext.dart';
+import 'package:boeoeg_app/widgets/aemterCard.dart';
+
+import 'package:boeoeg_app/widgets/mitgliederView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +31,8 @@ class _AemterWidgetState extends State<AemterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const AemterText(text: "Alpha:"),
-                  const AemterText(
+                  const AemterCard(text: "Alpha:"),
+                  const AemterCard(
                     text: "Daniel Lauer",
                   ),
                 ],
@@ -38,8 +40,8 @@ class _AemterWidgetState extends State<AemterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AemterText(text: "Beta:"),
-                  AemterText(
+                  const AemterCard(text: "Beta:"),
+                  const AemterCard(
                     text: "Philipp Nüßlein",
                   ),
                 ],
@@ -47,55 +49,22 @@ class _AemterWidgetState extends State<AemterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AemterText(text: "Schriftführer:"),
-                  AemterText(
-                    text: "Dennis Hofmann",
+                  const AemterCard(text: "Schriftführer:"),
+                  const AemterCard(
+                    text: "Dennis Hoffmann",
                   ),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AemterText(text: "Finanzen:"),
-                  AemterText(
-                    text: "Uwe Ziefle",
-                  ),
+                  const AemterCard(text: "Finanzen"),
+                  const AemterCard(text: "Uwe Ziefle"),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Alpha :",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Daniel Lauer",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  )
-                ],
-              )
             ],
           ),
-        )
+        ),
       ],
     );
   }

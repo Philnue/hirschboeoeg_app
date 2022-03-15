@@ -5,9 +5,9 @@ import 'termine.dart';
 
 class HttpHelper {
   //! ändern
-  Future<List<Termin>> loadAllTermine(String path) async {
+  Future<List<Termin>> loadAllTermine() async {
     try {
-      Uri dataURL = Uri.parse(path);
+      Uri dataURL = Uri.parse(Constants.loadAllTermine);
 
       http.Response response = await http.get(dataURL);
 
@@ -196,6 +196,29 @@ class HttpHelper {
 
       http.Response response = await http.get(dataURL);
 
+      var data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+      List<String> s = [];
+
+      for (var t in data) {
+        String m = "";
+
+        m += t["vorname"];
+        m += " ";
+        m += t["nachname"];
+
+        s.add(m);
+      }
+
+      return s;
+    } catch (_) {
+      throw ("API load error" + _.toString());
+    }
+  }
+
+  Future<List<String>> loadallmitglieder() async {
+    try {
+      Uri dataURL = Uri.parse(Constants.loadAllMitglieder);
+      http.Response response = await http.get(dataURL);
       var data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       List<String> s = [];
 

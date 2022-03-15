@@ -1,5 +1,5 @@
 import 'package:boeoeg_app/classes/termine.dart';
-import 'package:boeoeg_app/widgets/allTerminZusagen.dart';
+import 'package:boeoeg_app/widgets/mitgliederView.dart';
 import 'package:boeoeg_app/widgets/iconwithtext.dart';
 import 'package:boeoeg_app/widgets/notizwidget.dart';
 import 'package:boeoeg_app/widgets/futureBuilderSwitch.dart';
@@ -17,6 +17,10 @@ class SelectedCalendarItem extends StatefulWidget {
 class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
   bool initvalue = false;
   int id = 0;
+
+  refresh() {
+    setState(() {});
+  }
 
   //HttpHelper httpHelper = HttpHelper();
   //id = Hive.box("settings").get("id");
@@ -100,8 +104,9 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
               ),
             ),
           ),
-          Expanded(
-            child: AllTerminZusagenView(id: args.id),
+          MitgliederView(
+            id: args.id,
+            padding: 5,
           ),
         ],
       )),

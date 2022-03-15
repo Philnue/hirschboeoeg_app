@@ -36,8 +36,7 @@ class _KalendarClassState extends State<KalendarClass> {
   void loadData() async {
     try {
       HttpHelper httpHelper = HttpHelper();
-      var data =
-          await httpHelper.loadAllTermine(consts.Constants.loadAllTermine);
+      var data = await httpHelper.loadAllTermine();
 
       setState(() {
         transferdata(data);

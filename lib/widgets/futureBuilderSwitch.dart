@@ -70,7 +70,7 @@ class _FutureBuilderSwitchState extends State<FutureBuilderSwitch> {
                             mitgliedId: Hive.box("settings").get("id"));
                       }
 
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                     });
                     //! value change und hinzufügen oder löschen aus der db
                   });
