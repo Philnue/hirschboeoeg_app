@@ -1,7 +1,5 @@
-import 'package:boeoeg_app/IOS/widgets/calendar/selectedCalendarItem.dart';
 import 'package:boeoeg_app/MyHomePageAndroid.dart';
 import 'package:boeoeg_app/MyHomePageIOS.dart';
-import 'package:boeoeg_app/classes/Api/lizenz.api.dart';
 import 'package:boeoeg_app/classes/Api/notification.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/classes/constants.dart';
@@ -43,7 +41,10 @@ void main() async {
     var mm = HiveHelper.putAllTermine(liste);
     var mmm = await HiveHelper.getallTermine();
 
-    var m = await Constants.checkInternetConnection();
+    var apiAvailable = await Constants.checkInternetConnection();
+
+    if (apiAvailable) {
+    } else {}
     //var m = Hive.box("settings").put("termine", liste);
 
     //var tt = Hive.box("settings").get("termine") as List<Termin>;
@@ -125,11 +126,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var isAndroid = Platform.isAndroid;
     var isIOS = Platform.isIOS;
 
     //return für android / ios
     //! connected internet ?
+    //! Alerts :
     return isIOS
         ? MyHomePageIOS(mybrightness: _brightness)
         : MyHomePageAndroid(mybrightness: _brightness);

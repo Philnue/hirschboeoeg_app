@@ -76,7 +76,8 @@ class Constants {
   static Future<bool> checkInternetConnection() async {
     var _isConnected = false;
     try {
-      final response = await InternetAddress.lookup(Constants.fritzBoxConnection);
+      final response =
+          await InternetAddress.lookup(Constants.fritzBoxConnection);
       if (response.isNotEmpty) {
         _isConnected = true;
       }

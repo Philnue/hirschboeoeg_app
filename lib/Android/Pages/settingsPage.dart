@@ -1,4 +1,4 @@
-import 'package:boeoeg_app/Android/drawer_widget.dart';
+import 'package:boeoeg_app/Android/drawerWidget.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text("Einstellungen"),
         backgroundColor: Theme.of(context).backgroundColor,
       ),
-      drawer: const Drawer_Widget(),
+      drawer: const DrawerWidget(),
       body: const Center(child: Text("Einstellungen")),
     );
   }

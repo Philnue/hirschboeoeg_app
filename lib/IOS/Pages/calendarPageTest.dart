@@ -27,6 +27,7 @@ class _CalendarPageTestState extends State<CalendarPageTest> {
   }
 
   Future<void> getTermine() async {
+    //!Internet schauen wenn offline
     _terminlist = await TerminApi.loadAllTermine();
 
     setState(() {

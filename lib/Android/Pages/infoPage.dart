@@ -1,4 +1,4 @@
-import 'package:boeoeg_app/Android/drawer_widget.dart';
+import 'package:boeoeg_app/Android/drawerWidget.dart';
 import 'package:flutter/material.dart';
 
 import '../../IOS/widgets/info/aemterWidget.dart';
@@ -21,7 +21,7 @@ class _InfoPageState extends State<InfoPage> {
         title: const Text("Info Seite"),
         backgroundColor: Theme.of(context).backgroundColor,
       ),
-      drawer: const Drawer_Widget(),
+      drawer: const DrawerWidget(),
       body: Column(
         children: [
           Expanded(

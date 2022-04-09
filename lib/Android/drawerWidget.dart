@@ -9,14 +9,14 @@ import 'package:hive_flutter/adapters.dart';
 import '../classes/Api/mitglied.api.dart';
 import '../classes/format.dart';
 
-class Drawer_Widget extends StatefulWidget {
-  const Drawer_Widget({Key? key}) : super(key: key);
+class DrawerWidget extends StatefulWidget {
+  const DrawerWidget({Key? key}) : super(key: key);
 
   @override
-  State<Drawer_Widget> createState() => _Drawer_WidgetState();
+  State<DrawerWidget> createState() => _DrawerWidgetState();
 }
 
-class _Drawer_WidgetState extends State<Drawer_Widget> {
+class _DrawerWidgetState extends State<DrawerWidget> {
   late TextEditingController _controller = TextEditingController(text: "");
   final int _id = HiveHelper.currentId;
   //! teste

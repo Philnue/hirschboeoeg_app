@@ -1,5 +1,5 @@
 import 'package:boeoeg_app/Android/Widgets/calendar/calendaritemAndroid.dart';
-import 'package:boeoeg_app/Android/drawer_widget.dart';
+import 'package:boeoeg_app/Android/drawerWidget.dart';
 import 'package:flutter/material.dart';
 
 import '../../classes/Api/termin.api.dart';
@@ -24,6 +24,8 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Future<void> getTermine() async {
+
+    //! wenn offline 
     _terminlist = await TerminApi.loadAllTermine();
 
     setState(() {
@@ -38,7 +40,7 @@ class _CalendarPageState extends State<CalendarPage> {
         backgroundColor: Theme.of(context).backgroundColor,
         title: const Text("Kalendareinträge"),
       ),
-      drawer: const Drawer_Widget(),
+      drawer: const DrawerWidget(),
       body: _isLoading
           ? const CircularProgressIndicator(
               color: Colors.blue,

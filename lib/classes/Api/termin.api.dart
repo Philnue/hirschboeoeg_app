@@ -6,6 +6,7 @@ import 'dart:convert';
 class TerminApi {
   static Future<List<Termin>> loadAllTermine() async {
     try {
+      //! vllr hier offline rein wenn offline dann aus hvie ladne
       Uri dataURL = Uri.parse(Constants.loadAllTermine);
       http.Response response = await http.get(dataURL);
       var data = jsonDecode(utf8.decode(response.bodyBytes));
