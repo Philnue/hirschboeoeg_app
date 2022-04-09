@@ -1,0 +1,53 @@
+import 'package:boeoeg_app/Android/Pages/calendarPage.dart';
+import 'package:boeoeg_app/Android/Pages/infoPage.dart';
+import 'package:boeoeg_app/Android/Pages/pollPage.dart';
+import 'package:boeoeg_app/Android/Pages/settingsPage.dart';
+import 'package:flutter/material.dart';
+
+class Drawer_Widget extends StatefulWidget {
+  const Drawer_Widget({Key? key}) : super(key: key);
+
+  @override
+  State<Drawer_Widget> createState() => _Drawer_WidgetState();
+}
+
+class _Drawer_WidgetState extends State<Drawer_Widget> {
+  int _currentSelected = 0;
+  var stringListe = [
+    {Icons.calendar_month, "Kalender", CalendarPage.routeName},
+    {Icons.poll, "Abstimmungen", PollPage.routeName},
+    {Icons.settings, "Einstellungen", SettingsPage.routeName},
+    {Icons.info, "Info", InfoPage.routeName},
+    {Icons.all_inbox, "Alle Mitglieder", "none"},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+        backgroundColor: Colors.amberAccent,
+        child: Material(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Icon(stringListe[index].elementAt(0) as IconData),
+                title: Text(
+                  stringListe[index].elementAt(1) as String,
+                  style: TextStyle(
+                      color: _currentSelected == index
+                          ? Colors.cyan
+                          : Colors.green),
+                ),
+                onTap: () {
+                  setState(() {
+                    _currentSelected = index;
+                    Navigator.of(context).pushReplacementNamed(
+                        stringListe[index].elementAt(2) as String);
+                  });
+                },
+              );
+            },
+            itemCount: stringListe.length,
+          ),
+        ));
+  }
+}

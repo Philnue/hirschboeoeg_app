@@ -1,42 +1,85 @@
-import 'package:boeoeg_app/MyHomePage.dart';
+import 'package:boeoeg_app/IOS/widgets/calendar/selectedCalendarItem.dart';
+import 'package:boeoeg_app/MyHomePageAndroid.dart';
+import 'package:boeoeg_app/MyHomePageIOS.dart';
+import 'package:boeoeg_app/classes/Api/lizenz.api.dart';
+import 'package:boeoeg_app/classes/Api/notification.api.dart';
+import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/classes/constants.dart';
-import 'package:boeoeg_app/classes/httpHelper.dart';
-import 'package:boeoeg_app/widgets/selectedCalendarItem.dart';
+import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:io' show Platform;
 
 //void main() => runApp(MyApp());
 
 void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox('settings');
-  HttpHelper httpHelper = HttpHelper();
-  String? name = await Hive.box("settings").get("name");
+  try {
+    await Hive.initFlutter();
+    await Hive.openBox('settings');
 
-  //! ändern
-  // if (name == null) {
-  //  name = "1 2";
-  // }
-  //! testen
-  var vorname = name?.split(" ")[0];
-  var nachname = name?.split(" ")[1];
+    List<Termin> liste = [
+      Termin(
+          id: 1,
+          name: "name1",
+          datum: "datum1",
+          adresse: "adresse1",
+          uhrzeit: "uhrzeit1",
+          notizen: "notizen1",
+          treffpunkt: "treffpunkt1",
+          kleidung: "kleidung"),
+      Termin(
+          id: 2,
+          name: "name2",
+          datum: "datum2",
+          adresse: "adresse2",
+          uhrzeit: "uhrzeit2",
+          notizen: "notizen2",
+          treffpunkt: "treffpunkt2",
+          kleidung: "kleidung2")
+    ];
 
-  if (name != null) {
-    int crrId = await httpHelper
-        .loadMitliedIdByName(Constants.getMitliedById + "$vorname,$nachname");
-    await Hive.box("settings").put("id", crrId);
-    print("crrPerson = $crrId ");
-  } else {
-    await Hive.box("settings").put("id", 0);
+    var mm = HiveHelper.putAllTermine(liste);
+    var mmm = await HiveHelper.getallTermine();
+
+    var m = await Constants.checkInternetConnection();
+    //var m = Hive.box("settings").put("termine", liste);
+
+    //var tt = Hive.box("settings").get("termine") as List<Termin>;
+
+    String? name = await Hive.box("settings").get("name");
+
+    //! ändern
+    // if (name == null) {
+    //  name = "1 2";
+    // }
+    //! testen
+    var vorname = name?.split(" ")[0];
+    var nachname = name?.split(" ")[1];
+
+    if (name != null) {
+      int crrId = await MitgliedApi.loadMitliedIdByName(
+          Constants.getMitliedById + "$vorname,$nachname");
+      await Hive.box("settings").put("id", crrId);
+      print("crrPerson = $crrId ");
+    } else {
+      await Hive.box("settings").put("id", 0);
+    }
+
+    //var t = await LizenzApi.isVerified("hirschboeoeg");
+    //print(t);
+
+    runApp(MyApp());
+  } catch (_) {
+    print(_.toString());
   }
-
-  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
-  static const String _title = 'Böög App';
+  //static const String _title = 'WhatsBöög';
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -49,8 +92,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
     _brightness = WidgetsBinding.instance?.window.platformBrightness;
+
+    // NotificationApi.init();
+    NotificationApi.init(initScheduled: true);
+    listenNotifications();
+
     super.initState();
   }
+
+  void listenNotifications() =>
+      NotificationApi.onNotifications.stream.listen((event) {});
+
+  void onClickedNotifications(String? payload) => {};
+  //Navigator.of(context).push(SelectedCalendarItem.routeName);
 
   @override
   void dispose() {
@@ -69,32 +123,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangePlatformBrightness();
   }
 
-  CupertinoThemeData get _lightTheme => const CupertinoThemeData(
-        brightness: Brightness.light,
-        primaryColor: CupertinoColors.black,
-        textTheme: CupertinoTextThemeData(primaryColor: CupertinoColors.black),
-      );
-
-  CupertinoThemeData get _darkTheme => const CupertinoThemeData(
-        brightness: Brightness.dark,
-        primaryColor: CupertinoColors.white,
-        textTheme: CupertinoTextThemeData(primaryColor: CupertinoColors.white),
-      );
-
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      title: MyApp._title,
-      theme: _brightness == Brightness.dark ? _darkTheme : _lightTheme,
-      home: const MyHomePage(),
-      //home: Hive.box("settings").get("regist") == null          ? Center(              child: Text("Bitte Registrieren"),            )          : MyHomePage(),
+    var isAndroid = Platform.isAndroid;
+    var isIOS = Platform.isIOS;
 
-      routes: {
-        //'/': (context) => const FirstScreen(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        SelectedCalendarItem.routeName: (context) =>
-            const SelectedCalendarItem(),
-      },
-    );
+    //return für android / ios
+    //! connected internet ?
+    return isIOS
+        ? MyHomePageIOS(mybrightness: _brightness)
+        : MyHomePageAndroid(mybrightness: _brightness);
+    //return isIOS ? const MyHomePageIOS(bnreighness) : const MyHomePageAndroid(brighness);
   }
 }
