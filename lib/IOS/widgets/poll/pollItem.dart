@@ -18,6 +18,10 @@ class PollItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: ListTile(
+          onTap: () {
+            Navigator.of(context).pushNamed(SelectedPollItem.routeName,
+                arguments: actAbstimmung);
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -58,17 +62,6 @@ class PollItem extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          trailing: IconButton(
-            //Icon Button Info
-            icon: const Icon(
-              CupertinoIcons.info_circle_fill,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamed(SelectedPollItem.routeName,
-                  arguments: actAbstimmung);
-            },
           ),
         ),
       ),

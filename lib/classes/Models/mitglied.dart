@@ -2,13 +2,13 @@ class Mitglied {
   final int id;
   final String vorname;
   final String nachname;
-  //final String spitzname;
+  final String spitzName;
 
   Mitglied({
     required this.id,
     required this.vorname,
     required this.nachname,
-    //this.spitzname = ""
+    this.spitzName = ""
   });
 
   String get fullname {
@@ -20,7 +20,7 @@ class Mitglied {
       id: json["id"],
       vorname: json["vorname"],
       nachname: json["nachname"],
-      //spitzname: json["spitzname"]
+      spitzName: json["spitzName"]
     );
   }
 
@@ -29,7 +29,7 @@ class Mitglied {
       id: json["id"],
       vorname: json["vorname"],
       nachname: json["nachname"],
-      //! spitzname
+     spitzName: json["spitzName"]
     );
   }
 

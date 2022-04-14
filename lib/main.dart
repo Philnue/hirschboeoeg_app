@@ -2,13 +2,16 @@ import 'package:boeoeg_app/MyHomePageAndroid.dart';
 import 'package:boeoeg_app/MyHomePageIOS.dart';
 import 'package:boeoeg_app/classes/Api/notification.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
-import 'package:boeoeg_app/classes/constants.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io' show Platform;
+
+import 'IOS/widgets/calendar/selectedCalendarItem.dart';
+import 'classes/Api/termin.api.dart';
 
 //void main() => runApp(MyApp());
 
@@ -38,8 +41,8 @@ void main() async {
           kleidung: "kleidung2")
     ];
 
-    var mm = HiveHelper.putAllTermine(liste);
-    var mmm = await HiveHelper.getallTermine();
+    //var mm = HiveHelper.putAllTermine(liste);
+    //var mmm = await HiveHelper.getallTermine();
 
     var apiAvailable = await Constants.checkInternetConnection();
 
@@ -61,12 +64,15 @@ void main() async {
 
     if (name != null) {
       int crrId = await MitgliedApi.loadMitliedIdByName(
-          Constants.getMitliedById + "$vorname,$nachname");
+          MitgliedApi.getMitliedByIdString + "$vorname,$nachname");
       await Hive.box("settings").put("id", crrId);
       print("crrPerson = $crrId ");
     } else {
       await Hive.box("settings").put("id", 0);
     }
+
+    print("Id = ${HiveHelper.currentId}");
+    print("IdSet = ${HiveHelper.isIdSet}");
 
     //var t = await LizenzApi.isVerified("hirschboeoeg");
     //print(t);
@@ -95,17 +101,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     _brightness = WidgetsBinding.instance?.window.platformBrightness;
 
     // NotificationApi.init();
-    NotificationApi.init(initScheduled: true);
-    listenNotifications();
 
     super.initState();
   }
-
-  void listenNotifications() =>
-      NotificationApi.onNotifications.stream.listen((event) {});
-
-  void onClickedNotifications(String? payload) => {};
-  //Navigator.of(context).push(SelectedCalendarItem.routeName);
 
   @override
   void dispose() {
@@ -127,10 +125,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var isIOS = Platform.isIOS;
-
     //return für android / ios
     //! connected internet ?
     //! Alerts :
+
     return isIOS
         ? MyHomePageIOS(mybrightness: _brightness)
         : MyHomePageAndroid(mybrightness: _brightness);

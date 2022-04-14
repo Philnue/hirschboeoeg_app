@@ -1,4 +1,4 @@
-
+import 'package:boeoeg_app/IOS/widgets/cupertinoAlertDialogCustom.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
 import 'package:boeoeg_app/classes/format.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class NamefieldWidget extends StatefulWidget {
-  const NamefieldWidget({Key? key}) : super(key: key);
-
+  const NamefieldWidget({Key? key, required this.act}) : super(key: key);
+  final Function act;
   @override
   _NamefieldWidgetState createState() => _NamefieldWidgetState();
 }
@@ -85,23 +85,21 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
                 } else {
                   MitgliedApi.addMitlied(vorname: vorname, nachname: nachname);
 
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoAlertDialog(
-                            title: const Text("Hinzufügen der Person"),
-                            content: Text(
-                                "Ihr Name $vorname $nachname wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut"),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Ok"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  //exit(0);
-                                },
-                              )
-                            ],
-                          ));
+                  CupertinoAlertDialogCustom.showAlertDialog(
+                    context,
+                    "Hinzufügen der Person",
+                    "Ihr Name $vorname $nachname wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut",
+                    [
+                      CupertinoDialogAction(
+                        child: const Text("Ok"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
                 }
+                widget.act;
               });
             },
             prefix: const Icon(CupertinoIcons.person),

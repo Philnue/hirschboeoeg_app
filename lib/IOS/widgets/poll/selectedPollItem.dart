@@ -1,4 +1,6 @@
+import 'package:boeoeg_app/classes/Api/abstimmungStimme.api.dart';
 import 'package:boeoeg_app/classes/Models/abstimmung.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
 import '../calendar/cupertinoListTile.dart';
 
@@ -45,13 +47,33 @@ class _SelectedPollItemState extends State<SelectedPollItem> {
                 leading: CupertinoIcons.question,
                 trailing: args.frage,
               ),
-              Text(args.frage)
+              Text(args.frage),
+              args.mitglied.id == HiveHelper.currentId
+                  ? Text("selbst erstellt")
+                  : Text("nicht selbst erstellt"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CupertinoButton(
+                      child: const Text("Ja"),
+                      onPressed: () {
+                        //Yes Poll
+                      }),
+                  CupertinoButton(
+                      child: const Text("Nein"),
+                      onPressed: () {
+                        //No Poll
+
+                        var t = AbstimmungsStimmeApi.loadAllAbstimmungsStimmeByid(
+                            args.id);
+                      }),
+                ],
+              )
             ],
           ),
         ));
   }
 }
-
 
 //halflasdlfa
 //dfalöksdjföalsdf

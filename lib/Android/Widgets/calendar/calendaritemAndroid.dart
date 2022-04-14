@@ -1,5 +1,5 @@
 import 'package:boeoeg_app/Android/Widgets/calendar/selectedCalendarItemAndroid.dart';
-import 'package:boeoeg_app/classes/constants.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

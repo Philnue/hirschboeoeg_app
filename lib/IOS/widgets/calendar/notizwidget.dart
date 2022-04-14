@@ -1,3 +1,4 @@
+import 'package:boeoeg_app/IOS/widgets/cupertinoAlertDialogCustom.dart';
 import 'package:flutter/cupertino.dart';
 
 class NotizWidget extends StatelessWidget {
@@ -41,20 +42,15 @@ class NotizWidget extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: const Text("...mehr"),
                   onPressed: () {
-                    showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) => CupertinoAlertDialog(
-                              title: const Text("Notiz"),
-                              content: Text(text),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: const Text("Schließen"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )
-                              ],
-                            ));
+                    CupertinoAlertDialogCustom.showAlertDialog(
+                        context, "Notiz", text, [
+                      CupertinoDialogAction(
+                        child: const Text("Schließen"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ]);
                   }),
             ),
           ),

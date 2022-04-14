@@ -1,3 +1,4 @@
+import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
 import 'package:boeoeg_app/IOS/Pages/newsPage.dart';
 import 'package:boeoeg_app/IOS/widgets/info/aemterWidget.dart';
 import 'package:boeoeg_app/IOS/widgets/mitgliederView.dart';
@@ -39,6 +40,13 @@ class _InfoPageTestState extends State<InfoPageTest> {
                             Navigator.of(context).pushNamed(NewsPage.routeName);
                           },
                         ),
+                        CupertinoButton(
+                          child: const Icon(CupertinoIcons.settings, size: 30),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(SettingsPage.routeName);
+                          },
+                        ),
                       ]),
                   middle: const Text("Ämter und Mitglieder"),
                 ),
@@ -47,12 +55,22 @@ class _InfoPageTestState extends State<InfoPageTest> {
             Expanded(
               child: Column(
                 children: [
-                  const AemterWidget(),
-                  const Text(
-                    "Böögs",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  const Flexible(
+                    flex: 5,
+                    child: AemterWidget(),
                   ),
-                  MitgliederView(),
+                  const Flexible(
+                    flex: 1,
+                    child: Text(
+                      "Böögs",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 5,
+                    child: MitgliederView(),
+                  ),
                 ],
               ),
             )

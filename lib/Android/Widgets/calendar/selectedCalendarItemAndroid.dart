@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../classes/Api/terminAbstimmung.api.dart';
+import '../../../classes/hiveHelper.dart';
 
 class SelectedCalendarItemAndroid extends StatefulWidget {
   const SelectedCalendarItemAndroid({Key? key}) : super(key: key);
@@ -117,18 +118,24 @@ class _SelectedCalendarItemAndroidState
                   context: context,
                   builder: (context) => const CupertinoActionSheetCustom(),
                 ).then((value) {
-                  if (value == "add") {
-                    if (_mitgliedid != 0) {
-                      _addTerminAbstimung();
-                      refresh();
-                    }
+                  if (HiveHelper.currentId != 0) {
+                    TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
+                        value, args);
+
+                    refresh();
                   }
-                  if (value == "delete") {
-                    if (_mitgliedid != 0) {
-                      _deleteTerminAbstimmung();
-                      refresh();
-                    }
-                  }
+                  // if (value == "add") {
+                  //   if (_mitgliedid != 0) {
+                  //     _addTerminAbstimung();
+                  //     refresh();
+                  //   }
+                  // }
+                  // if (value == "delete") {
+                  //   if (_mitgliedid != 0) {
+                  //     _deleteTerminAbstimmung();
+                  //     refresh();
+                  //   }
+                  // }
                 });
               },
             ),
@@ -144,8 +151,11 @@ class _SelectedCalendarItemAndroidState
             ),
             //SwitchTest(actTermin: args),
 
-            MitgliederViewAndroid(
-              id: args.id,
+            Flexible(
+              flex: 3,
+              child: MitgliederViewAndroid(
+                id: args.id,
+              ),
             )
             //FutureBuilderSwitchWithList(actTermin: args),
           ],

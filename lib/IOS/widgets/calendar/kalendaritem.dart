@@ -1,4 +1,4 @@
-import 'package:boeoeg_app/classes/constants.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
 
 import 'package:boeoeg_app/IOS/widgets/calendar/selectedCalendarItem.dart';
 import 'package:flutter/cupertino.dart';

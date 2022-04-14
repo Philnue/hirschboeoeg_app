@@ -68,6 +68,10 @@ class HiveHelper {
     return response;
   }
 
+  static bool get isIdSet {
+    return currentId != 0 ? true : false;
+  }
+
   static int get currentId {
     return getValueInt(box: "settings", key: "id");
   }
@@ -89,9 +93,41 @@ class HiveHelper {
     }
   }
 
-  static Future<List<Termin>> getallTermine() async
-   {
-    return await
-     Hive.box("settings").get("termine");
+  static Future<List<Termin>> getallTermine() async {
+    return await Hive.box("settings").get("termine");
+  }
+
+  static void writeNotificationToDevice(int days, DateTime time) {
+    var t = "${time.hour}:${time.minute}";
+    Hive.box("settings").put("days", days);
+    Hive.box("settings").put("time", time);
+  }
+
+  static int get selectedDaysForNotifications {
+    return getValueInt(box: "settings", key: "days");
+  }
+
+  static DateTime get selectedTimeForNotifications {
+    DateTime valo = Hive.box("settings").get("time");
+
+    return valo != null
+        ? valo
+        : DateTime.now().add(
+            Duration(minutes: 5 - DateTime.now().minute % 5),
+          );
+  }
+
+  static String get selectedTimeForNotificationsFormat {
+    DateTime timeStamp = selectedTimeForNotifications;
+    return "${timeStamp.hour}:${timeStamp.minute}";
+  }
+
+  static String get currentSpitzName {
+    var value = Hive.box("settings").get("spitzName").toString();
+    return value == "null" ? "" : value;
+  }
+
+  static void writeSpitzName(String spitzName) {
+    Hive.box("settings").put("spitzName", spitzName);
   }
 }

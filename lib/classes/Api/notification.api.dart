@@ -1,8 +1,12 @@
+import 'package:boeoeg_app/classes/Models/termin.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import '../format.dart';
 
 class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
@@ -73,6 +77,7 @@ class NotificationApi {
         id,
         title,
         body,
+
         //_scheduleDaily(Time(8)),
         //_scheduleWeekly(Time(8), days [DateTime.monday, DateTime.tuesday])
         tz.TZDateTime.from(scheduledTime, tz.local),
@@ -102,5 +107,31 @@ class NotificationApi {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
+  }
+
+  static void cancel(int id) => _notifications.cancel(id);
+  static void cancelAll() => _notifications.cancelAll();
+
+  static void showNotificationWithTermin(Termin termin) {
+    //var CalcUhrzeit = termin.uhrzeit == "n.A." ? "09:00" : termin.uhrzeit;
+
+    var days = HiveHelper.selectedDaysForNotifications;
+    var time = HiveHelper.selectedTimeForNotificationsFormat;
+
+    cancel(termin.id);
+
+    var dateTimeMinus1Day = Format.getDateTimeObejectWithMinusDuration(
+        termin.datum, time, Duration(days: days));
+
+    var bodyGenerator = Format.bodyGenerator(days);
+    //wenn n.A. drinnen ist
+
+    NotificationApi.showNotificationSchedule(
+      scheduledTime: dateTimeMinus1Day,
+      body: "Dieser Termin fängt $bodyGenerator um ${termin.uhrzeit}",
+      id: termin.id,
+      payload: termin.id.toString(),
+      title: termin.name,
+    );
   }
 }

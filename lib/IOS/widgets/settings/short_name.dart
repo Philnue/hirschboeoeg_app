@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:boeoeg_app/IOS/widgets/cupertinoAlertDialogCustom.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
 import 'package:boeoeg_app/classes/format.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
@@ -26,14 +27,15 @@ class _ShortNameWidgetState extends State<ShortNameWidget> {
     //_box = Hive.box("settings");
 
     //_textController =        TextEditingController(text: hiveHelper.loadDataString("name"));
-    _textController = TextEditingController(text: HiveHelper.currentName);
+    _textController =
+        TextEditingController(text: HiveHelper.currentSpitzName); //shortname
 
     _id = HiveHelper.currentId;
 
+    var m = HiveHelper.currentSpitzName;
+
     print(_textController.text);
   }
-
-  void setNameToHive(String name) {}
 
   @override
   Widget build(BuildContext context) {
@@ -63,38 +65,7 @@ class _ShortNameWidgetState extends State<ShortNameWidget> {
               setState(() {
                 _textController.text = value;
 
-                //_box.put("name", value);
-
-                bool worked = HiveHelper.writeName(value);
-                print(value);
-
-                var datatext = _textController.text.split(" ");
-                String vorname = datatext[0];
-                String nachname = datatext[1];
-
-                if (_id > 0) {
-                  MitgliedApi.updateMitlied(
-                      crrid: _id, vorname: vorname, nachname: nachname);
-                } else {
-                  MitgliedApi.addMitlied(vorname: vorname, nachname: nachname);
-
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoAlertDialog(
-                            title: const Text("Hinzufügen des Spitzname"),
-                            content: Text(
-                                "Ihr Spitzname $vorname $nachname wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut"),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Ok"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  exit(0);
-                                },
-                              )
-                            ],
-                          ));
-                }
+                MitgliedApi.addOrUpdateShortNameCupertino(value, context);
               });
             },
             prefix: const Icon(CupertinoIcons.person),

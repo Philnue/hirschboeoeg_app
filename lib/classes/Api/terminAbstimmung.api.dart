@@ -1,8 +1,32 @@
-import 'package:boeoeg_app/classes/constants.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../Models/termin.dart';
+import 'notification.api.dart';
+
 class TerminAbstimmungApi {
+  static const String getTerminAbstimmungByMitgliedAnTerminString =
+      Constants.fritzBoxConnection +
+          "TerminAbstimmung/loadterminabstimmungbyterminidandmitgliedid/";
+  static const String updateTerminAbstimmungByMitgliedAnTerminString =
+      Constants.fritzBoxConnection +
+          "TerminAbstimmung/updateterminabstimmungbyterminidandmitgliedid/";
+
+  static const String deleteTerminAbstimmungString =
+      Constants.fritzBoxConnection + "TerminAbstimmung/deleteterminabstimmung/";
+
+  static const String loadAllTerminAbstimmungByTerminString =
+      Constants.fritzBoxConnection +
+          "TerminAbstimmung/loadAllTerminZusagenByTerminId/";
+
+  static const String addTerminAbstimmungString =
+      Constants.fritzBoxConnection + "TerminAbstimmung/addTerminAbstimmung/";
+  static const String loadAllTerminAbstimmungStringString =
+      Constants.fritzBoxConnection +
+          "TerminAbstimmung/loadallterminabstimmung/";
+
   static Future<bool> addTerminAbstimmung({
     required int terminId,
     required int mitgliedId,
@@ -10,7 +34,7 @@ class TerminAbstimmungApi {
   }) async {
     try {
       String convertedPath =
-          Constants.addTerminAbstimmung + "$terminId,$mitgliedId,$entscheidung";
+          addTerminAbstimmungString + "$terminId,$mitgliedId,$entscheidung";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -29,8 +53,8 @@ class TerminAbstimmungApi {
     required int mitgliedId,
   }) async {
     try {
-      String convertedPath = Constants.getTerminAbstimmungByMitgliedAnTermin +
-          "$mitgliedId,$terminId";
+      String convertedPath =
+          getTerminAbstimmungByMitgliedAnTerminString + "$mitgliedId,$terminId";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -60,9 +84,8 @@ class TerminAbstimmungApi {
     required bool entscheidung,
   }) async {
     try {
-      String convertedPath =
-          Constants.updateTerminAbstimmungByMitgliedAnTermin +
-              "$terminId,$mitgliedId, $entscheidung";
+      String convertedPath = updateTerminAbstimmungByMitgliedAnTerminString +
+          "$terminId,$mitgliedId, $entscheidung";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -82,7 +105,7 @@ class TerminAbstimmungApi {
   }) async {
     try {
       String convertedPath =
-          Constants.deleteTerminAbstimmung + "$mitgliedId,$terminId";
+          deleteTerminAbstimmungString + "$mitgliedId,$terminId";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -93,6 +116,25 @@ class TerminAbstimmungApi {
       return data;
     } catch (_) {
       throw ("Termin API load error" + _.toString());
+    }
+  }
+
+  static void addOrUpdateTerminAbstimmung(dynamic value, Termin termin) {
+    if (value == "add") {
+      TerminAbstimmungApi.addTerminAbstimmung(
+        terminId: termin.id,
+        mitgliedId: HiveHelper.currentId,
+        entscheidung: 1,
+      );
+
+      NotificationApi.showNotificationWithTermin(termin);
+    }
+
+    if (value == "delete") {
+      TerminAbstimmungApi.deleteTerminAbstimmung(
+          terminId: termin.id, mitgliedId: HiveHelper.currentId);
+
+      NotificationApi.cancel(termin.id);
     }
   }
 }

@@ -1,9 +1,13 @@
+import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
+import 'package:boeoeg_app/IOS/widgets/cupertinoAlertDialogCustom.dart';
+import 'package:boeoeg_app/classes/Api/notification.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoActionSheetCustom.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoListTile.dart';
 import 'package:boeoeg_app/IOS/widgets/mitgliederView.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/notizwidget.dart';
 import 'package:boeoeg_app/classes/format.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../classes/Api/terminAbstimmung.api.dart';
@@ -23,8 +27,9 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
 
   @override
   Widget build(BuildContext context) {
-    var m = MediaQuery.of(context).size;
+    //var m = MediaQuery.of(context).size;
     int _mitgliedid = Hive.box("settings").get("id");
+
     final args = ModalRoute.of(context)!.settings.arguments as Termin;
 
     _addTerminAbstimung() {
@@ -61,8 +66,6 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
       child: SafeArea(
           child: Center(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -97,24 +100,43 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
               ),
               onPressed: Format.isAcceptTime == true
                   ? () {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (context) =>
-                            const CupertinoActionSheetCustom(),
-                      ).then((value) {
-                        if (value == "add") {
-                          if (_mitgliedid != 0) {
-                            _addTerminAbstimung();
-                            refresh();
-                          }
-                        }
-                        if (value == "delete") {
-                          if (_mitgliedid != 0) {
-                            _deleteTerminAbstimmung();
-                            refresh();
-                          }
-                        }
-                      });
+                      if (HiveHelper.isIdSet) {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) =>
+                              const CupertinoActionSheetCustom(),
+                        ).then(
+                          (value) {
+                            if (HiveHelper.isIdSet) {
+                              TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
+                                  value, args);
+
+                              refresh();
+                            }
+                          },
+                        );
+                      } else {
+                        CupertinoAlertDialogCustom.showAlertDialog(
+                          context,
+                          "Fehler",
+                          "Bevor sie eine Terminabstimmung hinzufügen können muss erst ein Name definiert werden",
+                          [
+                            CupertinoDialogAction(
+                              child: const Text("Einstellungen"),
+                              onPressed: () {
+                                Navigator.of(context).pushReplacementNamed(
+                                    SettingsPage.routeName);
+                              },
+                            ),
+                            CupertinoDialogAction(
+                              child: const Text("Schließen"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        );
+                      }
                     }
                   : null,
             ),
@@ -128,12 +150,11 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
                 ),
               ),
             ),
-            //SwitchTest(actTermin: args),
-
-            MitgliederView(
-              id: args.id,
+            Expanded(
+              child: MitgliederView(
+                id: args.id,
+              ),
             )
-            //FutureBuilderSwitchWithList(actTermin: args),
           ],
         ),
       )),
