@@ -4,6 +4,8 @@ import 'package:boeoeg_app/classes/hiveHelper.dart';
 import "package:flutter/cupertino.dart";
 import 'package:flutter/material.dart';
 
+import '../../classes/format.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
   static final String routeName = "settingsPage";
@@ -49,11 +51,9 @@ class _SettingsPageState extends State<SettingsPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           NamefieldWidget(act: refresh),
-
           HiveHelper.currentId != 0
               ? ShortNameWidget()
               : Text("Bitte erst namen eintippen"),
-
           const Text(
             "Uhrzeit für die Mitteilung",
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -62,6 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
             flex: 3,
             child: CupertinoDatePicker(
               use24hFormat: true,
+
               initialDateTime: HiveHelper.selectedTimeForNotifications,
               // initialDateTime: DateTime.now().add(
               //   Duration(minutes: 5 - DateTime.now().minute % 5),
@@ -71,6 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onDateTimeChanged: (value) {
                 setState(() {
                   timePicker = value;
+                  print(timePicker);
                 });
                 var selectedTime = value;
               },
@@ -101,26 +103,23 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
-
           Flexible(
             flex: 4,
             child: CupertinoButton(
               color: CupertinoColors.systemBlue,
+              disabledColor: CupertinoColors.systemGrey,
               child: Text(
                 "Speichern",
                 style: TextStyle(color: CupertinoColors.white),
               ),
-              onPressed: () {
-                HiveHelper.writeNotificationToDevice(daysPicker, timePicker);
-              },
+              onPressed: Format.isAcceptTime
+                  ? () {
+                      HiveHelper.writeNotificationToDevice(
+                          daysPicker, timePicker);
+                    }
+                  : null,
             ),
           )
-          //  HiveHelper.isVerified ? Container() : LicenseRegisterTextField(),
-          //Text(
-          //  "Liste aller Neuigkeiten",
-          //  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          //),
-          //Text("App wurde offiziell hochgeladen"),
         ],
       )),
     );

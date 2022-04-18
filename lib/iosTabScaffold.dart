@@ -47,10 +47,10 @@ class _IOSTabScaffoldState extends State<IOSTabScaffold> {
             icon: Icon(CupertinoIcons.calendar),
             label: 'Termine',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.check_mark),
-            label: 'Abstimmung',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(CupertinoIcons.check_mark),
+          //   label: 'Abstimmung',
+          // ),
           // BottomNavigationBarItem(
           //   icon: Icon(CupertinoIcons.settings),
           //   label: 'Einstellungen',
@@ -73,9 +73,9 @@ class _IOSTabScaffoldState extends State<IOSTabScaffold> {
             //  return const PollPageTest();
 
             case 1:
-              return const PollPageTest();
-            case 2:
               return const InfoPageTest();
+            //case 2:
+            // return const InfoPageTest();
 
             default:
               break;

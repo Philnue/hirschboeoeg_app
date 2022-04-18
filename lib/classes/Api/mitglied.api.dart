@@ -2,7 +2,10 @@ import 'package:boeoeg_app/classes/Api/terminAbstimmung.api.dart';
 import 'package:boeoeg_app/classes/Models/mitglied.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import '../../Android/AndroidAlertDialogCustom.dart';
 import '../../IOS/widgets/cupertinoAlertDialogCustom.dart';
 import '../constants/constants.dart';
 import 'dart:convert';
@@ -29,6 +32,11 @@ class MitgliedApi {
   static const String updateShortNameByIdString =
       Constants.fritzBoxConnection + "Mitglieder/updateShortname/";
 
+  static const String getFullMitgliedByNameString =
+      Constants.fritzBoxConnection + "Mitglieder/getFullMitgliedByName/";
+
+  static const String deleteShortNameString =
+      Constants.fritzBoxConnection + "Mitglieder/deleteShortname/";
   static Future<int> loadMitliedIdByName(String path) async {
     try {
       Uri dataURL = Uri.parse(path);
@@ -46,7 +54,7 @@ class MitgliedApi {
 
       return 0;
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API loadMitliedIdByName" + _.toString());
     }
   }
 
@@ -55,7 +63,7 @@ class MitgliedApi {
       required String vorname,
       required String nachname}) async {
     try {
-      String convertedPath = addMitliedString + "$crrid,$vorname,$nachname";
+      String convertedPath = updateMitliedString + "$crrid,$vorname,$nachname";
 
       Uri dataURL = Uri.parse(convertedPath);
 
@@ -65,7 +73,7 @@ class MitgliedApi {
 
       return data;
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API update Mitglied" + _.toString());
     }
   }
 
@@ -80,14 +88,16 @@ class MitgliedApi {
 
       var data = jsonDecode(utf8.decode(response.bodyBytes));
 
-      var m = data[0]["id"];
+      var m = data[0]["id"]; //! heir api alles zurückgeben nur funktion andere
+      var tt = await loadFullMitgliedById(m);
 
-      bool t =
-          await HiveHelper.putValueInt(box: "settings", key: "id", value: m);
+      Hive.box("settings").put("spitzName", tt.spitzName);
+
+      await HiveHelper.putValueInt(box: "settings", key: "id", value: m);
 
       return true;
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API add Mitglied" + _.toString());
     }
   }
 
@@ -111,7 +121,8 @@ class MitgliedApi {
       }
       return Mitglied.mitgliederFromSnapshot(_temp);
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API loadTerminAbstimmugPersonsByTerminId" +
+          _.toString());
     }
   }
 
@@ -125,10 +136,9 @@ class MitgliedApi {
       for (var item in data) {
         _temp.add(item);
       }
-
       return Mitglied.mitgliederFromSnapshot(_temp);
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API loadallmitglieder" + _.toString());
     }
   }
 
@@ -146,12 +156,11 @@ class MitgliedApi {
 
       return Mitglied.getFullMitglied(_temp[0]);
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API loadFullMitgliedById" + _.toString());
     }
   }
 
-  static Future<Mitglied> addShortName(
-      int mitglied_id, String shortName) async {
+  static Future<bool> addShortName(int mitglied_id, String shortName) async {
     try {
       String custom = addShortNameByIdString + "$mitglied_id,$shortName";
       Uri dataURL = Uri.parse(custom);
@@ -160,21 +169,51 @@ class MitgliedApi {
 
       return data;
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API addShortName" + _.toString());
     }
   }
 
-  static Future<Mitglied> udpateShortName(
-      int mitglied_id, String shortName) async {
+  static Future<bool> udpateShortName(int mitglied_id, String shortName) async {
     try {
-      String custom = updateShortNameByIdString + "$mitglied_id,$shortName";
+      String custom = "";
+
+      if (shortName != "") {
+        custom = updateShortNameByIdString + "$mitglied_id,$shortName";
+      } else {
+        custom = deleteShortNameString + "$mitglied_id";
+      }
+
       Uri dataURL = Uri.parse(custom);
       http.Response response = await http.get(dataURL);
       var data = jsonDecode(utf8.decode(response.bodyBytes));
 
       return data;
     } catch (_) {
-      throw ("Mitglied API load error" + _.toString());
+      throw ("Mitglied API udpateShortName" + _.toString());
+    }
+  }
+
+  static Future<Mitglied> loadFullMitliedByName(
+      String vorname, String nachname) async {
+    try {
+      Uri dataURL =
+          Uri.parse(getFullMitgliedByNameString + "$vorname,$nachname");
+
+      http.Response response = await http.get(dataURL);
+
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      List _temp = [];
+
+      if (data != null) {
+        for (var item in data) {
+          _temp.add(item);
+        }
+      }
+
+      return Mitglied.getFullMitglied(_temp[0]);
+    } catch (_) {
+      throw ("Mitglied API loadFullMitliedByName" + _.toString());
     }
   }
 
@@ -183,13 +222,12 @@ class MitgliedApi {
     if (HiveHelper.currentSpitzName == "") {
       var m = HiveHelper.writeSpitzName(shortName);
 
-      print("new ${HiveHelper.currentSpitzName}");
-      //MitgliedApi.addShortName(HiveHelper.currentId, value);
+      var tt = MitgliedApi.addShortName(HiveHelper.currentId, shortName);
 
       CupertinoAlertDialogCustom.showAlertDialog(
         context,
         "Hinzufügen des Spitznamens",
-        "Ihr Spitzname $shortName wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut",
+        "Ihr Spitzname $shortName wurde erfolgreich hinzugefügt",
         [
           CupertinoDialogAction(
             child: const Text("Ok"),
@@ -204,13 +242,12 @@ class MitgliedApi {
       var old = HiveHelper.currentSpitzName;
       var m = HiveHelper.writeSpitzName(shortName);
 
-      print("new ${HiveHelper.currentSpitzName}");
-      //MitgliedApi.udpateShortName(HiveHelper.currentId, value);
+      var mm = MitgliedApi.udpateShortName(HiveHelper.currentId, shortName);
 
       CupertinoAlertDialogCustom.showAlertDialog(
         context,
         "Update des Spitznamens",
-        "Ihr Spitzname $old zu $shortName wurde erfolgreich geändert bitte schließen sie die App und starten diese erneut",
+        "Ihr Spitzname $old zu $shortName wurde erfolgreich geändert",
         [
           CupertinoDialogAction(
             child: const Text("Ok"),
@@ -221,6 +258,40 @@ class MitgliedApi {
           )
         ],
       );
+    }
+  }
+
+  static void addOrUpdateShortNameAndroid(
+      String shortName, BuildContext context) {
+    if (HiveHelper.currentSpitzName == "") {
+      var m = HiveHelper.writeSpitzName(shortName);
+
+      var tt = MitgliedApi.addShortName(HiveHelper.currentId, shortName);
+
+      AndroidAlertDialogCustom.showAlertDialog("Spitzname wurde hinzugefügt",
+          "Spitzname $shortName wurde hinzugefügt", context, [
+        TextButton(
+          child: Text("Ok"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ]);
+    } else {
+      var old = HiveHelper.currentSpitzName;
+      var m = HiveHelper.writeSpitzName(shortName);
+
+      var mm = MitgliedApi.udpateShortName(HiveHelper.currentId, shortName);
+
+      AndroidAlertDialogCustom.showAlertDialog("Spitzname wurde geändert",
+          "Spitzname wurde von $old zu $shortName geändert", context, [
+        TextButton(
+          child: Text("Ok"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ]);
     }
   }
 }

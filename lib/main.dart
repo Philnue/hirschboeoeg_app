@@ -1,6 +1,7 @@
 import 'package:boeoeg_app/MyHomePageAndroid.dart';
 import 'package:boeoeg_app/MyHomePageIOS.dart';
 import 'package:boeoeg_app/classes/Api/notification.api.dart';
+import 'package:boeoeg_app/classes/Models/mitglied.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
@@ -41,41 +42,27 @@ void main() async {
           kleidung: "kleidung2")
     ];
 
-    //var mm = HiveHelper.putAllTermine(liste);
-    //var mmm = await HiveHelper.getallTermine();
-
-    var apiAvailable = await Constants.checkInternetConnection();
-
-    if (apiAvailable) {
-    } else {}
-    //var m = Hive.box("settings").put("termine", liste);
-
-    //var tt = Hive.box("settings").get("termine") as List<Termin>;
-
-    String? name = await Hive.box("settings").get("name");
-
+    //String? name = await Hive.box("settings").get("name");
+    var crrName = HiveHelper.currentName;
     //! ändern
     // if (name == null) {
     //  name = "1 2";
     // }
     //! testen
-    var vorname = name?.split(" ")[0];
-    var nachname = name?.split(" ")[1];
 
-    if (name != null) {
-      int crrId = await MitgliedApi.loadMitliedIdByName(
-          MitgliedApi.getMitliedByIdString + "$vorname,$nachname");
-      await Hive.box("settings").put("id", crrId);
-      print("crrPerson = $crrId ");
+    if (crrName != "") {
+      Mitglied currentMitglied = await MitgliedApi.loadFullMitliedByName(
+          crrName.split(" ")[0], crrName.split(" ")[1]);
+
+      await Hive.box("settings").put("spitzName", currentMitglied.spitzName);
+
+      await Hive.box("settings").put("id", currentMitglied.id);
+
+      print("crrPersonId = ${currentMitglied.id} ");
+      print("crrSpitzname = ${currentMitglied.spitzName} ");
     } else {
       await Hive.box("settings").put("id", 0);
     }
-
-    print("Id = ${HiveHelper.currentId}");
-    print("IdSet = ${HiveHelper.isIdSet}");
-
-    //var t = await LizenzApi.isVerified("hirschboeoeg");
-    //print(t);
 
     runApp(MyApp());
   } catch (_) {

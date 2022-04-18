@@ -4,12 +4,11 @@ class Mitglied {
   final String nachname;
   final String spitzName;
 
-  Mitglied({
-    required this.id,
-    required this.vorname,
-    required this.nachname,
-    this.spitzName = ""
-  });
+  Mitglied(
+      {required this.id,
+      required this.vorname,
+      required this.nachname,
+      this.spitzName = ""});
 
   String get fullname {
     return "$vorname $nachname";
@@ -20,22 +19,25 @@ class Mitglied {
       id: json["id"],
       vorname: json["vorname"],
       nachname: json["nachname"],
-      spitzName: json["spitzName"]
     );
   }
 
   static Mitglied getFullMitglied(dynamic json) {
+    String m = "";
+    if (json["spitzName"] != null) {
+      m = json["spitzName"];
+    }
+
     return Mitglied(
-      id: json["id"],
-      vorname: json["vorname"],
-      nachname: json["nachname"],
-     spitzName: json["spitzName"]
-    );
+        id: json["id"],
+        vorname: json["vorname"],
+        nachname: json["nachname"],
+        spitzName: m);
   }
 
   static List<Mitglied> mitgliederFromSnapshot(List snapshot) {
     return snapshot.map((data) {
-      return Mitglied.fromJson(data);
+      return Mitglied.getFullMitglied(data);
     }).toList();
   }
 }

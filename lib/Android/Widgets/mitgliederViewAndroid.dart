@@ -27,7 +27,7 @@ class _MitgliederViewAndroidState extends State<MitgliederViewAndroid> {
   }
 
   Future<void> getData() async {
-    print(widget.id);
+   
     _list = await MitgliedApi.loadTerminAbstimmugPersonsByTerminId(
         terminId: widget.id);
 

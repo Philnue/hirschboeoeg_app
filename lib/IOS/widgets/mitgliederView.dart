@@ -41,6 +41,10 @@ class MitgliederView extends StatelessWidget {
         return ListView.builder(
           itemCount: projectSnap.data!.length,
           itemBuilder: (context, index) {
+            Mitglied m = projectSnap.data![index];
+            var tt = m.fullname;
+            var ttt = m.spitzName;
+
             return Align(
               alignment: Alignment.topLeft,
               child: Padding(
@@ -52,7 +56,7 @@ class MitgliederView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: Text(
-                        projectSnap.data![index].fullname,
+                        m.spitzName == "" ? m.fullname : m.spitzName,
                         style: TextStyle(
                             fontSize: fontsize, fontWeight: FontWeight.w600),
                       ),

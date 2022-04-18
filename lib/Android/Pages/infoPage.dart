@@ -1,3 +1,4 @@
+import 'package:boeoeg_app/Android/Widgets/mitgliederViewAndroid.dart';
 import 'package:boeoeg_app/Android/drawerWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -22,30 +23,28 @@ class _InfoPageState extends State<InfoPage> {
         backgroundColor: Theme.of(context).backgroundColor,
       ),
       drawer: const DrawerWidget(),
-      body: Column(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                const AemterWidget(),
-                const SizedBox(
-                  height: 10,
+      body: SafeArea(
+        child: Expanded(
+          child: Column(
+            children: [
+              const Flexible(
+                flex: 5,
+                child: AemterWidget(),
+              ),
+              const Flexible(
+                flex: 1,
+                child: Text(
+                  "Böögs",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
-                const Text(
-                  "Alle registrierten Mitglieder",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                MitgliederView(),
-              ],
-            ),
-          )
-        ],
+              ),
+              Flexible(
+                flex: 5,
+                child: MitgliederViewAndroid(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

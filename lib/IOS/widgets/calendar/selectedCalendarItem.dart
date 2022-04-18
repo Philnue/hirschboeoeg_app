@@ -32,19 +32,6 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
 
     final args = ModalRoute.of(context)!.settings.arguments as Termin;
 
-    _addTerminAbstimung() {
-      TerminAbstimmungApi.addTerminAbstimmung(
-        terminId: args.id,
-        mitgliedId: _mitgliedid,
-        entscheidung: 1,
-      );
-    }
-
-    _deleteTerminAbstimmung() {
-      TerminAbstimmungApi.deleteTerminAbstimmung(
-          terminId: args.id, mitgliedId: _mitgliedid);
-    }
-
     var stringListe = [
       {args.uhrzeit, CupertinoIcons.clock, "Uhrzeit:     "},
       {args.datumConvertedInGerman, CupertinoIcons.calendar, "Datum:      "},
@@ -106,11 +93,11 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
                           builder: (context) =>
                               const CupertinoActionSheetCustom(),
                         ).then(
-                          (value) {
+                          (value) async {
                             if (HiveHelper.isIdSet) {
-                              TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
-                                  value, args);
-
+                              await TerminAbstimmungApi
+                                  .addOrUpdateTerminAbstimmung(value, args);
+                              setState(() {});
                               refresh();
                             }
                           },

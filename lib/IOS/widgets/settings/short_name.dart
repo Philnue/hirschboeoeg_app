@@ -17,7 +17,6 @@ class ShortNameWidget extends StatefulWidget {
 
 class _ShortNameWidgetState extends State<ShortNameWidget> {
   late TextEditingController _textController;
-  late Box<dynamic> _box;
 
   late int _id;
   @override
@@ -33,8 +32,6 @@ class _ShortNameWidgetState extends State<ShortNameWidget> {
     _id = HiveHelper.currentId;
 
     var m = HiveHelper.currentSpitzName;
-
-    print(_textController.text);
   }
 
   @override
@@ -43,9 +40,10 @@ class _ShortNameWidgetState extends State<ShortNameWidget> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Format.isAcceptTime
-              ? const Text("Spitzname")
-              : const Text("Saufmodus ist aktviert"),
+          const Text(
+            "Spitzname",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           //const Text("Vorname Nachname"),
           const SizedBox(
             height: 10,

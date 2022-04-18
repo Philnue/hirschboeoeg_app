@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 
 import 'Android/Widgets/calendar/selectedCalendarItemAndroid.dart';
 import 'Theme.dart';
+import 'classes/Api/notification.api.dart';
+import 'classes/Api/termin.api.dart';
+import 'classes/Models/termin.dart';
 
 class MyHomePageAndroid extends StatefulWidget {
   const MyHomePageAndroid({Key? key, required this.mybrightness})
@@ -17,6 +20,8 @@ class MyHomePageAndroid extends StatefulWidget {
 }
 
 class _MyHomePageAndroidState extends State<MyHomePageAndroid> {
+  
+
   @override
   Widget build(BuildContext context) {
     var _brightness = widget.mybrightness;

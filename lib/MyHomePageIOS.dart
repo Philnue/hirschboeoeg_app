@@ -30,7 +30,7 @@ class _MyHomePageIOSState extends State<MyHomePageIOS> {
         theme: _brighness == Brightness.dark
             ? MyTheme.darkThemeCupertino
             : MyTheme.lightThemeCupertino,
-        home: IOSTabScaffold(),
+        home: const IOSTabScaffold(),
         routes: {
           SelectedCalendarItem.routeName: (context) =>
               const SelectedCalendarItem(),

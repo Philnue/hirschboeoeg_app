@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 import 'Models/termin.dart';
 
@@ -65,6 +66,10 @@ class HiveHelper {
   static bool get isVerified {
     bool response = getValueBool(box: "settings", key: "verified");
 
+    if (response == null) {
+      return false;
+    }
+
     return response;
   }
 
@@ -104,22 +109,35 @@ class HiveHelper {
   }
 
   static int get selectedDaysForNotifications {
-    return getValueInt(box: "settings", key: "days");
+    var value = Hive.box("settings").get("days");
+
+    if (value == null) {
+      return 0;
+    } else {
+      return value;
+    }
   }
 
   static DateTime get selectedTimeForNotifications {
-    DateTime valo = Hive.box("settings").get("time");
+    var valo = Hive.box("settings").get("time");
+    var timeObject = DateTime.now().add(
+      Duration(minutes: 5 - DateTime.now().minute % 5),
+    );
 
-    return valo != null
-        ? valo
-        : DateTime.now().add(
-            Duration(minutes: 5 - DateTime.now().minute % 5),
-          );
+    if (valo == null) {
+      return DateTime.now().add(
+        Duration(minutes: 5 - DateTime.now().minute % 5),
+      );
+    } else {
+      return valo;
+    }
   }
 
   static String get selectedTimeForNotificationsFormat {
     DateTime timeStamp = selectedTimeForNotifications;
-    return "${timeStamp.hour}:${timeStamp.minute}";
+    String hour = timeStamp.hour.toString().padLeft(2, '0');
+    String minute = timeStamp.minute.toString().padLeft(2, '0');
+    return "$hour:$minute";
   }
 
   static String get currentSpitzName {
@@ -127,7 +145,11 @@ class HiveHelper {
     return value == "null" ? "" : value;
   }
 
-  static void writeSpitzName(String spitzName) {
-    Hive.box("settings").put("spitzName", spitzName);
+  static void writeSpitzName(String spitzName) async {
+    try {
+      var t = await Hive.box("settings").put("spitzName", spitzName);
+    } catch (_) {
+      print(_.toString());
+    }
   }
 }

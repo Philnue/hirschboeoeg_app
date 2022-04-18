@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,18 +25,16 @@ class NotificationApi {
           payload: payload);
 
   static Future _notificationDetails() async {
-    final styleInformation = const BigPictureStyleInformation(
-      FilePathAndroidBitmap(""),
-      largeIcon: FilePathAndroidBitmap(""),
-    );
-
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-        //'channel id',
-        'channel id2',
+        'channel id',
+        //'channel id2',
         'channel name',
         playSound: false,
-        //importance: Importance.max, wenn angezeitgt werden soll sonst imc enter
+        priority: Priority.max,
+
+        importance:
+            Importance.max, //wenn angezeitgt werden soll sonst imc enter
       ),
       iOS: IOSNotificationDetails(),
     );
@@ -113,21 +114,38 @@ class NotificationApi {
   static void cancelAll() => _notifications.cancelAll();
 
   static void showNotificationWithTermin(Termin termin) {
-    //var CalcUhrzeit = termin.uhrzeit == "n.A." ? "09:00" : termin.uhrzeit;
-
     var days = HiveHelper.selectedDaysForNotifications;
+
     var time = HiveHelper.selectedTimeForNotificationsFormat;
 
     cancel(termin.id);
 
-    var dateTimeMinus1Day = Format.getDateTimeObejectWithMinusDuration(
-        termin.datum, time, Duration(days: days));
+    DateTime finished = DateTime(2022);
+    if (days == 0) {
+      finished = Format.getDateTimeObejectWithoutDuration(termin.datum, time);
+    } else {
+      finished = Format.getDateTimeObejectWithMinusDuration(
+          termin.datum, time, Duration(days: days));
+    }
 
     var bodyGenerator = Format.bodyGenerator(days);
     //wenn n.A. drinnen ist
 
+    var isAndroid = Platform.isAndroid;
+
+    if (isAndroid) {
+      finished = DateTime(
+          termin.terminAsDateTimeWithoutTime.year,
+          termin.terminAsDateTimeWithoutTime.month,
+          termin.terminAsDateTimeWithoutTime.day,
+          08,
+          00);
+    }
+
+    var test = DateTime.now().add(Duration(seconds: 8));
+
     NotificationApi.showNotificationSchedule(
-      scheduledTime: dateTimeMinus1Day,
+      scheduledTime: test,
       body: "Dieser Termin fängt $bodyGenerator um ${termin.uhrzeit}",
       id: termin.id,
       payload: termin.id.toString(),

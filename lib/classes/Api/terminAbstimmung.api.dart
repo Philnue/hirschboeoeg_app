@@ -119,9 +119,9 @@ class TerminAbstimmungApi {
     }
   }
 
-  static void addOrUpdateTerminAbstimmung(dynamic value, Termin termin) {
+  static Future<void> addOrUpdateTerminAbstimmung(dynamic value, Termin termin) async {
     if (value == "add") {
-      TerminAbstimmungApi.addTerminAbstimmung(
+      await TerminAbstimmungApi.addTerminAbstimmung(
         terminId: termin.id,
         mitgliedId: HiveHelper.currentId,
         entscheidung: 1,
@@ -131,7 +131,7 @@ class TerminAbstimmungApi {
     }
 
     if (value == "delete") {
-      TerminAbstimmungApi.deleteTerminAbstimmung(
+      await TerminAbstimmungApi.deleteTerminAbstimmung(
           terminId: termin.id, mitgliedId: HiveHelper.currentId);
 
       NotificationApi.cancel(termin.id);

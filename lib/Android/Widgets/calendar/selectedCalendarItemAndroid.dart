@@ -1,4 +1,7 @@
+import 'package:boeoeg_app/Android/AndroidAlertDialogCustom.dart';
 import 'package:boeoeg_app/Android/Widgets/mitgliederViewAndroid.dart';
+import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
+import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoListTile.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoActionSheetCustom.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/notizwidget.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../classes/Api/terminAbstimmung.api.dart';
+import '../../../classes/format.dart';
 import '../../../classes/hiveHelper.dart';
 
 class SelectedCalendarItemAndroid extends StatefulWidget {
@@ -64,7 +68,6 @@ class _SelectedCalendarItemAndroidState
         ),
       ),
       body: SafeArea(
-          child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,36 +77,21 @@ class _SelectedCalendarItemAndroidState
                 shrinkWrap: true,
                 itemCount: stringListe.length,
                 itemBuilder: ((context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                            stringListe[index].elementAt(1) as IconData,
-                            size: 30),
-                        //icon: stringListe[index].elementAt(1) as IconData,
+                  return CupertinoListTile(
+                    leading: stringListe[index].elementAt(1) as IconData,
+                    //icon: stringListe[index].elementAt(1) as IconData,
 
-                        title: Text(
-                          stringListe[index].elementAt(2) as String,
-                          style: const TextStyle(fontSize: 22),
-                        ),
-
-                        trailing: Text(
-                          stringListe[index].elementAt(0) as String,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            fontSize: 24,
-                          ),
-                        ),
-                      ),
-                    ],
+                    title: stringListe[index].elementAt(2) as String,
+                    trailing: stringListe[index].elementAt(0) as String,
                   );
                 })),
             args.notizen.length > 1
                 ? NotizWidget(text: args.notizen)
                 : Container(),
-            FlatButton(
-              padding: const EdgeInsets.all(10),
-              color: CupertinoColors.systemBlue,
+            ElevatedButton(
+              // padding: const EdgeInsets.all(10),
+              // color: CupertinoColors.systemBlue,
+
               child: Container(
                 child: const Text(
                   "Entscheidung abgeben",
@@ -113,31 +101,42 @@ class _SelectedCalendarItemAndroidState
                   ),
                 ),
               ),
-              onPressed: () {
-                showCupertinoModalPopup(
-                  context: context,
-                  builder: (context) => const CupertinoActionSheetCustom(),
-                ).then((value) {
-                  if (HiveHelper.currentId != 0) {
-                    TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
-                        value, args);
+              onPressed: Format.isAcceptTime == true
+                  ? () {
+                      if (HiveHelper.isIdSet) {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) =>
+                              const CupertinoActionSheetCustom(),
+                        ).then((value) async {
+                          await TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
+                              value, args);
 
-                    refresh();
-                  }
-                  // if (value == "add") {
-                  //   if (_mitgliedid != 0) {
-                  //     _addTerminAbstimung();
-                  //     refresh();
-                  //   }
-                  // }
-                  // if (value == "delete") {
-                  //   if (_mitgliedid != 0) {
-                  //     _deleteTerminAbstimmung();
-                  //     refresh();
-                  //   }
-                  // }
-                });
-              },
+                          refresh();
+                        });
+                      } else {
+                        AndroidAlertDialogCustom.showAlertDialog(
+                            "Fehler",
+                            "Bevor sie eine Terminabstimmung abgeben können, müssen sie erst einen Namen definieren",
+                            context, [
+                          TextButton(
+                            child: Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Einstellungen"),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(SettingsPage.routeName);
+                            },
+                          )
+                        ]);
+                        //name muss gesetzt werden
+                      }
+                    }
+                  : null,
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -151,16 +150,12 @@ class _SelectedCalendarItemAndroidState
             ),
             //SwitchTest(actTermin: args),
 
-            Flexible(
-              flex: 3,
-              child: MitgliederViewAndroid(
-                id: args.id,
-              ),
-            )
-            //FutureBuilderSwitchWithList(actTermin: args),
+            MitgliederViewAndroid(
+              id: args.id,
+            ),
           ],
         ),
-      )),
+      ),
     );
   }
 }

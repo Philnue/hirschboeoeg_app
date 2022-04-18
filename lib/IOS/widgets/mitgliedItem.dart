@@ -27,7 +27,9 @@ class MitgliedItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Text(
-                mitglied.fullname,
+                mitglied.spitzName == ""
+                    ? mitglied.fullname
+                    : mitglied.spitzName,
                 style: TextStyle(
                   fontSize: fontsize,
                   fontWeight: FontWeight.w600,

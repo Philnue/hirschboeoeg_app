@@ -17,19 +17,12 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
   late TextEditingController _textController;
   late Box<dynamic> _box;
 
-  late int _id;
+  //late int _id;
   @override
   void initState() {
     super.initState();
 
-    //_box = Hive.box("settings");
-
-    //_textController =        TextEditingController(text: hiveHelper.loadDataString("name"));
     _textController = TextEditingController(text: HiveHelper.currentName);
-
-    _id = HiveHelper.currentId;
-
-    print(_textController.text);
   }
 
   void setNameToHive(String name) {}
@@ -69,26 +62,38 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
             onSubmitted: (value) {
               setState(() {
                 _textController.text = value;
-
-                //_box.put("name", value);
-
+                var old = HiveHelper.currentName;
                 bool worked = HiveHelper.writeName(value);
-                print(value);
-
                 var datatext = _textController.text.split(" ");
                 String vorname = datatext[0];
                 String nachname = datatext[1];
 
-                if (_id > 0) {
+                if (HiveHelper.currentId > 0) {
                   MitgliedApi.updateMitlied(
-                      crrid: _id, vorname: vorname, nachname: nachname);
+                      crrid: HiveHelper.currentId,
+                      vorname: vorname,
+                      nachname: nachname);
+
+                  CupertinoAlertDialogCustom.showAlertDialog(
+                    context,
+                    "Bearbeiten der Person",
+                    "Ihr Name $old wurde zu $value erfolgreich geändert",
+                    [
+                      CupertinoDialogAction(
+                        child: const Text("Ok"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
                 } else {
                   MitgliedApi.addMitlied(vorname: vorname, nachname: nachname);
 
                   CupertinoAlertDialogCustom.showAlertDialog(
                     context,
                     "Hinzufügen der Person",
-                    "Ihr Name $vorname $nachname wurde erfolgreich hinzugefügt bitte schließen sie die App und starten diese erneut",
+                    "Ihr Name $vorname $nachname wurde erfolgreich hinzugefügt, sie können nun Terminabstimmungen hinzufügen",
                     [
                       CupertinoDialogAction(
                         child: const Text("Ok"),

@@ -20,8 +20,6 @@ class _LicenseRegisterTextFieldState extends State<LicenseRegisterTextField> {
   void initState() {
     super.initState();
     _textController = TextEditingController(text: "");
-
-    print(_textController.text);
   }
 
   @override
@@ -49,18 +47,23 @@ class _LicenseRegisterTextFieldState extends State<LicenseRegisterTextField> {
             HiveHelper.putValueBool(
                 box: "settings", key: "verified", value: true);
 
-            CupertinoAlertDialogCustom.showAlertDialog(
-                context,
-                "Erfolgreich aktiviert",
-                "Lizenz wurde erfolgreich aktiviert, die App kann nun genutzt werden",
-                [
-                  CupertinoDialogAction(
-                    child: const Text("Schließen"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ]);
+            showCupertinoDialog(
+                context: context,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    title: const Text("Erfolgreich aktiviert"),
+                    content: const Text(
+                        "Lizenz wurde erfolgreich aktiviert, die App kann nun genutzt werden"),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: const Text("Schließen"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
           } else {
             CupertinoAlertDialogCustom.showAlertDialog(
                 context,

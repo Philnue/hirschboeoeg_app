@@ -21,22 +21,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   final int _id = HiveHelper.currentId;
   //! teste
 
-  void showAlertDialog(String title, String description) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(title),
-        content: Text(description),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -58,39 +42,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               DrawerHeader(
                 child: Column(
                   children: [
-                    Format.isAcceptTime == false
-                        ? const Text("Saufmodus aktiviert")
-                        : Center(),
-                    const Text("Vorname Nachname"),
+                    const Text("Herzlich Wilkommen!"),
                     TextField(
-                      enabled: Format.isAcceptTime,
-                      controller: _controller,
-                      onSubmitted: (value) {
-                        setState(() {
-                          _controller.text = value;
-                          var oldname = HiveHelper.currentName;
-                          bool worked = HiveHelper.writeName(value);
-                          var datatext = _controller.text.split(" ");
-                          String vorname = datatext[0];
-                          String nachname = datatext[1];
-
-                          if (_id > 0) {
-                            MitgliedApi.updateMitlied(
-                                crrid: _id,
-                                vorname: vorname,
-                                nachname: nachname);
-
-                            showAlertDialog("Namensänderung",
-                                "Alter Name: $oldname\nNeuer Name: $value\nÄnderungen wurden vorgenommen");
-                          } else {
-                            showAlertDialog("Neuer Name wurde hinzugefügt",
-                                "Neuer Name: $value wurde erfolgreich hinzugefügt");
-                            MitgliedApi.addMitlied(
-                                vorname: vorname, nachname: nachname);
-                          }
-                        });
-                      },
-                    ),
+                        enabled: false,
+                        controller: _controller,
+                        onSubmitted: (value) {
+                          setState(() {});
+                        }),
                   ],
                 ),
               ),
@@ -104,15 +62,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 leading: const Icon(Icons.calendar_month),
                 title: const Text("Kalender"),
               ),
-              ListTile(
-                onTap: () {
-                  setState(() {
-                    Navigator.pushReplacementNamed(context, PollPage.routeName);
-                  });
-                },
-                leading: const Icon(Icons.poll),
-                title: const Text("Abstimmungen"),
-              ),
+              // ListTile(
+              //   onTap: () {
+              //     setState(() {
+              //       Navigator.pushReplacementNamed(context, PollPage.routeName);
+              //     });
+              //   },
+              //   leading: const Icon(Icons.poll),
+              //   title: const Text("Abstimmungen"),
+              // ),
               ListTile(
                 onTap: () {
                   setState(() {

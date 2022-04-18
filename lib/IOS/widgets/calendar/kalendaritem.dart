@@ -30,8 +30,6 @@ class KalendarItem extends StatelessWidget {
             child: Padding(
                 //Links Datumsanzeige
                 padding: const EdgeInsets.all(3.0),
-
-                //If einbauen wenn des datum heute oder morgen
                 child: actTermin.getDateCorrectly.length == 10
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,15 +79,6 @@ class KalendarItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Row(
-                //   children: [
-                //     const Text("Beginn: "),
-                //     Text(
-                //       actTermin.uhrzeit,
-                //     ),
-                //     const Text(" Uhr"),
-                //   ],
-                // ),
                 Text(
                   actTermin.treffpunkt,
                   style: (TextStyle(
@@ -103,14 +92,11 @@ class KalendarItem extends StatelessWidget {
             Navigator.of(context).pushNamed(SelectedCalendarItem.routeName,
                 arguments: actTermin);
           },
-          //onLongPress: () {
-          //  Navigator.of(context).pushNamed(ContextMenu.routeName);
-          //},
           trailing: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children:  [
-             const Icon(
+            children: [
+              const Icon(
                 CupertinoIcons.time,
                 //color: CupertinoTheme.of(context).primaryColor,
                 color: CupertinoColors.darkBackgroundGray,
@@ -120,7 +106,6 @@ class KalendarItem extends StatelessWidget {
                 actTermin.uhrzeit,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  //color: CupertinoTheme.of(context).primaryColor,
                   color: CupertinoColors.darkBackgroundGray,
                 ),
               ),

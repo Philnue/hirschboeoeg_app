@@ -43,6 +43,15 @@ class Termin {
     return datumConvertedInGerman;
   }
 
+  DateTime get terminAsDateTimeWithoutTime {
+    //"2022-06-27"
+    var year = int.parse(datum.substring(0, 4));
+    var month = int.parse(datum.substring(5, 7));
+    var day = int.parse(datum.substring(8, 10));
+
+    return DateTime(year, month, day);
+  }
+
   factory Termin.fromJson(dynamic json) {
     return Termin(
         id: json["id"],
