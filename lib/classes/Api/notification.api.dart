@@ -74,22 +74,24 @@ class NotificationApi {
     String? payload,
     required DateTime scheduledTime,
   }) async =>
-      _notifications.zonedSchedule(
-        id,
-        title,
-        body,
+      scheduledTime.isAfter(DateTime.now()) == true
+          ? _notifications.zonedSchedule(
+              id,
+              title,
+              body,
 
-        //_scheduleDaily(Time(8)),
-        //_scheduleWeekly(Time(8), days [DateTime.monday, DateTime.tuesday])
-        tz.TZDateTime.from(scheduledTime, tz.local),
-        await _notificationDetails(),
-        payload: payload,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        //matchDateTimeComponents: DateTimeComponents.time
-        // matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime
-      );
+              //_scheduleDaily(Time(8)),
+              //_scheduleWeekly(Time(8), days [DateTime.monday, DateTime.tuesday])
+              tz.TZDateTime.from(scheduledTime, tz.local),
+              await _notificationDetails(),
+              payload: payload,
+              androidAllowWhileIdle: true,
+              uiLocalNotificationDateInterpretation:
+                  UILocalNotificationDateInterpretation.absoluteTime,
+              //matchDateTimeComponents: DateTimeComponents.time
+              // matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime
+            )
+          : null;
 
   static tz.TZDateTime _scheduleDaily(Time time) {
     final now = tz.TZDateTime.now(tz.local);
@@ -142,10 +144,10 @@ class NotificationApi {
           00);
     }
 
-    var test = DateTime.now().add(Duration(seconds: 8));
-
+    //var test = DateTime.now().add(Duration(seconds: 8));
+    print(finished);
     NotificationApi.showNotificationSchedule(
-      scheduledTime: test,
+      scheduledTime: finished,
       body: "Dieser Termin fängt $bodyGenerator um ${termin.uhrzeit}",
       id: termin.id,
       payload: termin.id.toString(),

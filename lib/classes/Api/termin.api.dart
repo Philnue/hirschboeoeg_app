@@ -1,4 +1,7 @@
+import 'package:boeoeg_app/classes/Api/terminAbstimmung.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
+import 'package:boeoeg_app/classes/Models/terminTerminAbstimmung.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:http/http.dart' as http;
 import '../constants/constants.dart';
 import 'dart:convert';
@@ -8,6 +11,7 @@ class TerminApi {
       Constants.fritzBoxConnection + "Termine/loadTerminById/";
   static const String loadAllTermineString =
       Constants.fritzBoxConnection + "Termine/loadalltermine/";
+  //Constants.fritzBoxConnection + "new/loadTerminEntscheidung/";
 
   static Future<List<Termin>> loadAllTermine() async {
     try {
@@ -22,6 +26,32 @@ class TerminApi {
       }
 
       return Termin.termineFromSnapshot(_temp);
+    } catch (_) {
+      throw ("Termin API load error" + _.toString());
+    }
+  }
+
+  static Future<List<TerminTerminAbstimmung>>
+      loadAllTermineMitAbstimmung() async {
+    try {
+      //! vllr hier offline rein wenn offline dann aus hvie ladne
+      Uri dataURL = Uri.parse(loadAllTermineString);
+      http.Response response = await http.get(dataURL);
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+      List _temp = [];
+      List _tempAbstimmung = [];
+
+      for (var item in data) {
+        _temp.add(item);
+
+        var m = await TerminAbstimmungApi
+            .getTerminAbstimmungIntByPersonAndTerminNew(
+                terminId: item["id"], mitgliedId: HiveHelper.currentId);
+        _tempAbstimmung.add(m);
+      }
+
+      return TerminTerminAbstimmung.termineTerminAbstimmungFromSnapshotNew(
+          _temp, _tempAbstimmung);
     } catch (_) {
       throw ("Termin API load error" + _.toString());
     }

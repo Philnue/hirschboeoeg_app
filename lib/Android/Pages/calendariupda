@@ -48,8 +48,9 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
   }
 
-  Future<List<TerminTerminAbstimmung>> getData() async {
-    return await TerminApi.loadAllTermineMitAbstimmung();
+  Future<List<TerminTerminAbstimmung>> getData() async{
+
+    return await  TerminApi.loadAllTermineMitAbstimmung();
   }
 
   Future<void> getTermine() async {
@@ -82,49 +83,33 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () {
-              getTermine();
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Theme.of(context).primaryColor,
-            ),
-          )
-        ],
         backgroundColor: Theme.of(context).backgroundColor,
         title: const Text("Kalendareinträge"),
       ),
       drawer: const DrawerWidget(),
-      body: FutureBuilder<List<TerminTerminAbstimmung>>(
-        builder:
-            (context, AsyncSnapshot<List<TerminTerminAbstimmung>> projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none) {
-            return const Text("connection none");
-          }
-          if (projectSnap.connectionState == ConnectionState.waiting) {
-            const CircularProgressIndicator(
+      body: _isLoading
+          ? const CircularProgressIndicator(
               color: Colors.blue,
-            );
-          } else {
-            if (projectSnap.hasData && !projectSnap.hasError) {
-              return ListView.builder(
-                itemCount: _terminTerminAbstimmungen.length,
-                itemBuilder: (context, index) {
-                  return CalendarItemAndroid(
-                    actTermin: _terminTerminAbstimmungen[index].termin,
-                    entscheidung:
-                        _terminTerminAbstimmungen[index].terminAbstimmung,
-                  );
-                },
-              );
-            }
-          }
-          return const Text("Loading");
-        },
-        future: getData(),
-      ),
+            )
+          : SafeArea(
+              //! refresh einbauen
+              child: RefreshIndicator(
+                color: Colors.blue,
+                onRefresh: getTermine,
+                child: ListView.builder(
+                  itemCount: _terminTerminAbstimmungen.length,
+                  itemBuilder: (context, index) {
+                    return CalendarItemAndroid(
+                      actTermin: _terminTerminAbstimmungen[index].termin,
+                      entscheidung:
+                          _terminTerminAbstimmungen[index].terminAbstimmung,
+                    );
+                  },
+                ),
+              ),
+            ),
     );
   }
 }
+
+

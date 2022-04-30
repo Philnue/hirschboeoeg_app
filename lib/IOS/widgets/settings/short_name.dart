@@ -63,6 +63,8 @@ class _ShortNameWidgetState extends State<ShortNameWidget> {
               setState(() {
                 _textController.text = value;
 
+                //! komma kontroller
+
                 MitgliedApi.addOrUpdateShortNameCupertino(value, context);
               });
             },

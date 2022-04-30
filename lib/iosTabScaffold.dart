@@ -1,4 +1,5 @@
 import 'package:boeoeg_app/IOS/Pages/pollPageTest.dart';
+import 'package:boeoeg_app/IOS/Pages/qrPage.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/selectedCalendarItem.dart';
 import 'package:boeoeg_app/classes/Api/termin.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
@@ -55,6 +56,7 @@ class _IOSTabScaffoldState extends State<IOSTabScaffold> {
           //   icon: Icon(CupertinoIcons.settings),
           //   label: 'Einstellungen',
           // ),
+
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.info),
             label: 'Info',

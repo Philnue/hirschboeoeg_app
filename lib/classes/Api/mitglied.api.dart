@@ -117,6 +117,7 @@ class MitgliedApi {
       List _temp = [];
 
       for (var item in data) {
+       
         _temp.add(item);
       }
       return Mitglied.mitgliederFromSnapshot(_temp);
@@ -220,10 +221,6 @@ class MitgliedApi {
   static void addOrUpdateShortNameCupertino(
       String shortName, BuildContext context) {
     if (HiveHelper.currentSpitzName == "") {
-      var m = HiveHelper.writeSpitzName(shortName);
-
-      var tt = MitgliedApi.addShortName(HiveHelper.currentId, shortName);
-
       CupertinoAlertDialogCustom.showAlertDialog(
         context,
         "Hinzufügen des Spitznamens",
@@ -279,10 +276,6 @@ class MitgliedApi {
       ]);
     } else {
       var old = HiveHelper.currentSpitzName;
-      var m = HiveHelper.writeSpitzName(shortName);
-
-      var mm = MitgliedApi.udpateShortName(HiveHelper.currentId, shortName);
-
       AndroidAlertDialogCustom.showAlertDialog("Spitzname wurde geändert",
           "Spitzname wurde von $old zu $shortName geändert", context, [
         TextButton(

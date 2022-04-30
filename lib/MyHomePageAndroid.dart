@@ -1,3 +1,4 @@
+import 'package:boeoeg_app/Android/Pages/adminView.dart';
 import 'package:boeoeg_app/Android/Pages/calendarPage.dart';
 import 'package:boeoeg_app/Android/Pages/infoPage.dart';
 import 'package:boeoeg_app/Android/Pages/pollPage.dart';
@@ -20,8 +21,6 @@ class MyHomePageAndroid extends StatefulWidget {
 }
 
 class _MyHomePageAndroidState extends State<MyHomePageAndroid> {
-  
-
   @override
   Widget build(BuildContext context) {
     var _brightness = widget.mybrightness;
@@ -39,6 +38,7 @@ class _MyHomePageAndroidState extends State<MyHomePageAndroid> {
             const SelectedCalendarItemAndroid(),
         SettingsPage.routeName: (context) => const SettingsPage(),
         InfoPage.routeName: (context) => const InfoPage(),
+        AdminView.routeName: (context) => const AdminView(),
       },
     );
   }

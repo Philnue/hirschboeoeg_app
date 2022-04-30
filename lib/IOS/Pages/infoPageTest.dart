@@ -1,3 +1,4 @@
+import 'package:boeoeg_app/IOS/Pages/qrPage.dart';
 import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
 import 'package:boeoeg_app/IOS/Pages/newsPage.dart';
 import 'package:boeoeg_app/IOS/widgets/info/aemterWidget.dart';
@@ -39,6 +40,11 @@ class _InfoPageTestState extends State<InfoPageTest> {
                           onPressed: () {
                             Navigator.of(context).pushNamed(NewsPage.routeName);
                           },
+                        ),
+                        CupertinoButton(
+                          child: Icon(CupertinoIcons.qrcode, size: 30),
+                          onPressed: () =>
+                              {Navigator.pushNamed(context, QrPage.routeName)},
                         ),
                         CupertinoButton(
                           child: const Icon(CupertinoIcons.settings, size: 30),

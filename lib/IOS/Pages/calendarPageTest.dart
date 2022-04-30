@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:boeoeg_app/IOS/Pages/qrPage.dart';
+import 'package:boeoeg_app/classes/Api/terminAbstimmung.api.dart';
+import 'package:boeoeg_app/classes/Models/terminTerminAbstimmung.dart';
 import 'package:boeoeg_app/classes/format.dart';
 
 import 'package:boeoeg_app/classes/Api/termin.api.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/kalendaritem.dart';
+import 'package:boeoeg_app/classes/hiveHelper.dart';
 
 import 'package:flutter/cupertino.dart';
 
@@ -15,20 +21,27 @@ class CalendarPageTest extends StatefulWidget {
 }
 
 class _CalendarPageTestState extends State<CalendarPageTest> {
-  List<dynamic> allEntries = [];
+  //List<dynamic> allEntries = [];
 
-  List<Termin> _terminlist = [];
+  //List<Termin> _terminlist = [];
+  List<TerminTerminAbstimmung> _terminTerminAbstimmungen = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+
     getTermine();
   }
 
   Future<void> getTermine() async {
     //!Internet schauen wenn offline
-    _terminlist = await TerminApi.loadAllTermine();
+
+    //_terminlist = await TerminApi.loadAllTermine();
+
+    _terminTerminAbstimmungen = await TerminApi.loadAllTermineMitAbstimmung();
+
+    TerminAbstimmungApi.makeSaufiMode(_terminTerminAbstimmungen);
 
     setState(() {
       _isLoading = false;
@@ -46,8 +59,18 @@ class _CalendarPageTestState extends State<CalendarPageTest> {
                 controller: ScrollController(),
                 slivers: [
                   CupertinoSliverNavigationBar(
-                    largeTitle: Text(
-                      Format.currentDate,
+                    largeTitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          Format.currentDate,
+                        ),
+                        CupertinoButton(
+                          child: Icon(CupertinoIcons.refresh, size: 30),
+                          onPressed: () => {getTermine()},
+                        ),
+                      ],
                     ),
                     middle: const Text("Alle Termine"),
                   ),
@@ -63,10 +86,14 @@ class _CalendarPageTestState extends State<CalendarPageTest> {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        return KalendarItem(actTermin: _terminlist[index]);
+                        return KalendarItem(
+                          actTermin: _terminTerminAbstimmungen[index].termin,
+                          entscheidung:
+                              _terminTerminAbstimmungen[index].terminAbstimmung,
+                        );
                         //return TestCard(termin: _terminlist[index]);
                       },
-                      childCount: _terminlist.length,
+                      childCount: _terminTerminAbstimmungen.length,
                       addAutomaticKeepAlives: true,
                     ),
                   )

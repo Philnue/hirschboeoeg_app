@@ -1,5 +1,7 @@
 import 'package:boeoeg_app/IOS/Pages/newsPage.dart';
+import 'package:boeoeg_app/IOS/Pages/qrPage.dart';
 import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
+import 'package:boeoeg_app/IOS/Pages/adminView.dart';
 import 'package:boeoeg_app/Theme.dart';
 import 'package:boeoeg_app/iosTabScaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +40,8 @@ class _MyHomePageIOSState extends State<MyHomePageIOS> {
           SelectedPollItem.routeName: (context) => const SelectedPollItem(),
           NewsPage.routeName: (context) => const NewsPage(),
           SettingsPage.routeName: (context) => const SettingsPage(),
+          QrPage.routeName: (context) => const QrPage(),
+          AdminView.routeName: (context) => const AdminView(),
         });
   }
 }

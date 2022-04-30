@@ -83,12 +83,14 @@ class _SettingsPageState extends State<SettingsPage> {
             AndroidTextField(
                 title: "Vorname Nachname",
                 func: name,
-                initValue: HiveHelper.currentName),
+                initValue: HiveHelper.currentName,
+                isShortName: false),
             HiveHelper.currentId != 0
                 ? AndroidTextField(
                     title: "Spitzname",
                     func: shortName,
                     initValue: HiveHelper.currentSpitzName,
+                    isShortName: true,
                   )
                 : const Text("Bitte erst einen Namen eintippen"),
           ],

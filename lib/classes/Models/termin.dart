@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../format.dart';
 
 class Termin {
   final int id;
+
   final String name;
+
   final String datum;
+
   final String adresse;
+
   final String uhrzeit;
+
   final String notizen;
+
   final String treffpunkt;
+
   final String kleidung;
 
   Termin(
@@ -50,6 +58,22 @@ class Termin {
     var day = int.parse(datum.substring(8, 10));
 
     return DateTime(year, month, day);
+  }
+
+  DateTime get terminAsDateTime {
+    //"2022-06-27"
+    var year = int.parse(datum.substring(0, 4));
+    var month = int.parse(datum.substring(5, 7));
+    var day = int.parse(datum.substring(8, 10));
+    var hour = 00;
+    var minute = 00;
+
+    if (uhrzeit != "n.A.") {
+      hour = int.parse(uhrzeit.substring(0, 2));
+      minute = int.parse(uhrzeit.substring(3, 5));
+    }
+
+    return DateTime(year, month, day, hour, minute);
   }
 
   factory Termin.fromJson(dynamic json) {

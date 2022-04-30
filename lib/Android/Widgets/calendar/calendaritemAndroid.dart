@@ -4,12 +4,17 @@ import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../classes/Models/termin.dart';
+import '../../../classes/format.dart';
 
 class CalendarItemAndroid extends StatelessWidget {
-  const CalendarItemAndroid({Key? key, required this.actTermin})
-      : super(key: key);
+  const CalendarItemAndroid({
+    Key? key,
+    required this.actTermin,
+    required this.entscheidung,
+  }) : super(key: key);
 
   final Termin actTermin;
+  final int entscheidung;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,8 @@ class CalendarItemAndroid extends StatelessWidget {
           ),
           tileColor: Colors.white,
           leading: CircleAvatar(
-            backgroundColor: CupertinoColors.lightBackgroundGray,
+            backgroundColor:
+                Format.getAndroidColorsForEntscheidung(entscheidung),
             radius: 30,
             child: Padding(
                 //Links Datumsanzeige

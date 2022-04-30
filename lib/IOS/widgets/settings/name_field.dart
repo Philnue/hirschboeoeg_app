@@ -62,6 +62,10 @@ class _NamefieldWidgetState extends State<NamefieldWidget> {
             onSubmitted: (value) {
               setState(() {
                 _textController.text = value;
+
+                //! mit " " rein
+                //! namens kontrolle
+
                 var old = HiveHelper.currentName;
                 bool worked = HiveHelper.writeName(value);
                 var datatext = _textController.text.split(" ");

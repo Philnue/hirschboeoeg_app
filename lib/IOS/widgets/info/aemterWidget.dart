@@ -1,6 +1,6 @@
 import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:boeoeg_app/IOS/widgets/info/aemterListTile.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 class AemterWidget extends StatefulWidget {

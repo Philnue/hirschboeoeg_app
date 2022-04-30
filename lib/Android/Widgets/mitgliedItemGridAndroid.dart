@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../classes/Models/mitglied.dart';
+import '../../../classes/Models/mitglied.dart';
 
-class MitgliedItem extends StatelessWidget {
-  const MitgliedItem(
+class MitgliedItemGridAndroid extends StatelessWidget {
+  const MitgliedItemGridAndroid(
       {Key? key,
       required this.padding,
       required this.fontsize,
@@ -28,7 +28,9 @@ class MitgliedItem extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                mitglied.getName,
+                mitglied.spitzName == ""
+                    ? mitglied.fullname
+                    : mitglied.spitzName,
                 style: TextStyle(
                   fontSize: fontsize,
                   fontWeight: FontWeight.w600,
@@ -41,3 +43,13 @@ class MitgliedItem extends StatelessWidget {
     );
   }
 }
+
+// SizedBox(
+//             width: width * 0.5,
+//             height: 30,
+//             child: FittedBox(
+//                 fit: BoxFit.contain,
+//                 child: Text(
+//                   widget.trailing,
+//                 )),
+//           ),

@@ -1,14 +1,20 @@
+import 'package:boeoeg_app/classes/Models/terminAbstimmung.dart';
 import 'package:boeoeg_app/classes/constants/constants.dart';
 
 import 'package:boeoeg_app/IOS/widgets/calendar/selectedCalendarItem.dart';
+import 'package:boeoeg_app/classes/format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../classes/Models/termin.dart';
 
 class KalendarItem extends StatelessWidget {
-  const KalendarItem({Key? key, required this.actTermin}) : super(key: key);
+  const KalendarItem(
+      {Key? key, required this.actTermin, required this.entscheidung})
+      : super(key: key);
 
   final Termin actTermin;
+  //final bool entscheidung;
+  final int entscheidung;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,8 @@ class KalendarItem extends StatelessWidget {
           ),
           tileColor: Colors.white,
           leading: CircleAvatar(
-            backgroundColor: CupertinoColors.lightBackgroundGray,
+            backgroundColor:
+                Format.getCupertinoColorsForEntscheidung(entscheidung),
             radius: 30,
             child: Padding(
                 //Links Datumsanzeige

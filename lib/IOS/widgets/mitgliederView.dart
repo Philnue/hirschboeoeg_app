@@ -1,5 +1,7 @@
+import 'package:boeoeg_app/IOS/widgets/mitgliedItem.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
 import 'package:boeoeg_app/classes/Models/mitglied.dart';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class MitgliederView extends StatelessWidget {
   double fontsize, padding;
 
   Future<List<Mitglied>> loaddata() async {
+
     List<Mitglied> result;
 
     if (id == 0) {
@@ -38,33 +41,20 @@ class MitgliederView extends StatelessWidget {
                 )
               : const CupertinoActivityIndicator();
         }
-        return ListView.builder(
-          itemCount: projectSnap.data!.length,
-          itemBuilder: (context, index) {
-            Mitglied m = projectSnap.data![index];
-            var tt = m.fullname;
-            var ttt = m.spitzName;
-
-            return Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.all(padding),
-                child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        m.spitzName == "" ? m.fullname : m.spitzName,
-                        style: TextStyle(
-                            fontSize: fontsize, fontWeight: FontWeight.w600),
-                      ),
-                    )),
-              ),
-            );
-          },
-        );
+        return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3,
+            ),
+            itemCount: projectSnap.data!.length,
+            itemBuilder: (context, index) {
+              var item = projectSnap.data as List<Mitglied>;
+              return MitgliedItem(
+                fontsize: 22,
+                padding: 2,
+                mitglied: item[index],
+              );
+            });
       },
       future: loaddata(),
     );

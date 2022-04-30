@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: CupertinoDatePicker(
               use24hFormat: true,
 
-              initialDateTime: HiveHelper.selectedTimeForNotifications,
+              initialDateTime: HiveHelper.initValue,
               // initialDateTime: DateTime.now().add(
               //   Duration(minutes: 5 - DateTime.now().minute % 5),
               // ),

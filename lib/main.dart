@@ -3,9 +3,11 @@ import 'package:boeoeg_app/MyHomePageIOS.dart';
 import 'package:boeoeg_app/classes/Api/notification.api.dart';
 import 'package:boeoeg_app/classes/Models/mitglied.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
+import 'package:boeoeg_app/classes/calendarHelper.dart';
 import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,26 +23,32 @@ void main() async {
     await Hive.initFlutter();
     await Hive.openBox('settings');
 
-    List<Termin> liste = [
-      Termin(
-          id: 1,
-          name: "name1",
-          datum: "datum1",
-          adresse: "adresse1",
-          uhrzeit: "uhrzeit1",
-          notizen: "notizen1",
-          treffpunkt: "treffpunkt1",
-          kleidung: "kleidung"),
-      Termin(
-          id: 2,
-          name: "name2",
-          datum: "datum2",
-          adresse: "adresse2",
-          uhrzeit: "uhrzeit2",
-          notizen: "notizen2",
-          treffpunkt: "treffpunkt2",
-          kleidung: "kleidung2")
-    ];
+    await CalendarHelper();
+
+    // var t = await CalendarHelper().loadData();
+
+    // List<Termin> liste = [
+    //   Termin(
+    //       id: 1,
+    //       name: "name1",
+    //       datum: "datum1",
+    //       adresse: "adresse1",
+    //       uhrzeit: "uhrzeit1",
+    //       notizen: "notizen1",
+    //       treffpunkt: "treffpunkt1",
+    //       kleidung: "kleidung"),
+    //   Termin(
+    //       id: 2,
+    //       name: "name2",
+    //       datum: "datum2",
+    //       adresse: "adresse2",
+    //       uhrzeit: "uhrzeit2",
+    //       notizen: "notizen2",
+    //       treffpunkt: "treffpunkt2",
+    //       kleidung: "kleidung2")
+    // ];
+
+    // await Hive.box("settings").put("test", liste);
 
     //String? name = await Hive.box("settings").get("name");
     var crrName = HiveHelper.currentName;
@@ -49,6 +57,8 @@ void main() async {
     //  name = "1 2";
     // }
     //! testen
+
+    //! Problem Lauer
 
     if (crrName != "") {
       Mitglied currentMitglied = await MitgliedApi.loadFullMitliedByName(

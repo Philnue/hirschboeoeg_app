@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Format {
@@ -28,7 +30,7 @@ class Format {
     if (m.hour < 22 && m.hour > 6) {
       return true;
     } else {
-      return false; // muss auf false wieder gesetzt werden
+      return true; // muss auf false wieder gesetzt werden
     }
   }
 
@@ -85,4 +87,42 @@ class Format {
     }
     return body;
   }
+
+  static Color getCupertinoColorsForEntscheidung(int entscheidung) {
+    switch (entscheidung) {
+      case 0:
+        return CupertinoColors.lightBackgroundGray;
+
+      case 1:
+        return CupertinoColors.activeGreen.withOpacity(0.7);
+
+      case 2:
+        return CupertinoColors.systemRed.withOpacity(0.7);
+    }
+
+    return CupertinoColors.lightBackgroundGray;
+  }
+
+  static Color getAndroidColorsForEntscheidung(int entscheidung) {
+    switch (entscheidung) {
+      case 0:
+        return CupertinoColors.lightBackgroundGray;
+
+      case 1:
+        return CupertinoColors.activeGreen.withOpacity(0.7);
+
+      case 2:
+        return CupertinoColors.systemRed.withOpacity(0.7);
+    }
+
+    return CupertinoColors.lightBackgroundGray;
+  }
 }
+
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+}
+
+

@@ -14,6 +14,10 @@ class Mitglied {
     return "$vorname $nachname";
   }
 
+  String get getName {
+    return spitzName == "" ? fullname : spitzName;
+  }
+
   factory Mitglied.fromJson(dynamic json) {
     return Mitglied(
       id: json["id"],
@@ -28,11 +32,13 @@ class Mitglied {
       m = json["spitzName"];
     }
 
-    return Mitglied(
+    var tt = Mitglied(
         id: json["id"],
         vorname: json["vorname"],
         nachname: json["nachname"],
         spitzName: m);
+
+    return tt;
   }
 
   static List<Mitglied> mitgliederFromSnapshot(List snapshot) {

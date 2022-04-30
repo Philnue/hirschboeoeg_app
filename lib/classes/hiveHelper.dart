@@ -120,17 +120,16 @@ class HiveHelper {
 
   static DateTime get selectedTimeForNotifications {
     var valo = Hive.box("settings").get("time");
-    var timeObject = DateTime.now().add(
-      Duration(minutes: 5 - DateTime.now().minute % 5),
-    );
 
     if (valo == null) {
-      return DateTime.now().add(
-        Duration(minutes: 5 - DateTime.now().minute % 5),
-      );
+      return DateTime(initValue.year, initValue.month, initValue.day, 08, 00);
     } else {
       return valo;
     }
+  }
+
+  static DateTime get initValue {
+    return DateTime.now().add(Duration(minutes: 5 - DateTime.now().minute % 5));
   }
 
   static String get selectedTimeForNotificationsFormat {

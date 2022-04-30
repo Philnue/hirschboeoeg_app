@@ -1,9 +1,7 @@
+import 'package:boeoeg_app/Android/Widgets/info/aemterWidgetAndroid.dart';
 import 'package:boeoeg_app/Android/Widgets/mitgliederViewAndroid.dart';
 import 'package:boeoeg_app/Android/drawerWidget.dart';
 import 'package:flutter/material.dart';
-
-import '../../IOS/widgets/info/aemterWidget.dart';
-import '../../IOS/widgets/mitgliederView.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -24,26 +22,24 @@ class _InfoPageState extends State<InfoPage> {
       ),
       drawer: const DrawerWidget(),
       body: SafeArea(
-        child: Expanded(
-          child: Column(
-            children: [
-              const Flexible(
-                flex: 5,
-                child: AemterWidget(),
+        child: Column(
+          children: const [
+            Flexible(
+              flex: 5,
+              child: AemterWidgetAndroid(),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text(
+                "Böögs",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
-              const Flexible(
-                flex: 1,
-                child: Text(
-                  "Böögs",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-              ),
-              Flexible(
-                flex: 5,
-                child: MitgliederViewAndroid(),
-              ),
-            ],
-          ),
+            ),
+            Expanded(
+              flex: 5,
+              child: MitgliederViewAndroid(),
+            ),
+          ],
         ),
       ),
     );

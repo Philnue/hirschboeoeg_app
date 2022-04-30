@@ -1,15 +1,19 @@
 import 'package:boeoeg_app/Android/AndroidAlertDialogCustom.dart';
+import 'package:boeoeg_app/Android/Pages/adminView.dart';
+import 'package:boeoeg_app/Android/Widgets/calendar/linearProgressIndicatorCustom.dart';
 import 'package:boeoeg_app/Android/Widgets/mitgliederViewAndroid.dart';
 import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoListTile.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoActionSheetCustom.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/notizwidget.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../classes/Api/terminAbstimmung.api.dart';
+import '../../../classes/calendarHelper.dart';
 import '../../../classes/format.dart';
 import '../../../classes/hiveHelper.dart';
 
@@ -35,19 +39,6 @@ class _SelectedCalendarItemAndroidState
     int _mitgliedid = Hive.box("settings").get("id");
     final Termin args = ModalRoute.of(context)!.settings.arguments as Termin;
 
-    _addTerminAbstimung() {
-      TerminAbstimmungApi.addTerminAbstimmung(
-        terminId: args.id,
-        mitgliedId: _mitgliedid,
-        entscheidung: 1,
-      );
-    }
-
-    _deleteTerminAbstimmung() {
-      TerminAbstimmungApi.deleteTerminAbstimmung(
-          terminId: args.id, mitgliedId: _mitgliedid);
-    }
-
     var stringListe = [
       {args.uhrzeit, Icons.watch_later, "Uhrzeit:     "},
       {args.datumConvertedInGerman, Icons.calendar_month, "Datum:      "},
@@ -59,6 +50,7 @@ class _SelectedCalendarItemAndroidState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
+        centerTitle: true,
         title: Text(
           args.name,
           style: const TextStyle(
@@ -66,6 +58,17 @@ class _SelectedCalendarItemAndroidState
             fontSize: 22,
           ),
         ),
+        actions: [
+          Constants.isAdmin
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(AdminView.routeName, arguments: args.id);
+                  },
+                  icon: Icon(Icons.info),
+                )
+              : Text(""),
+        ],
       ),
       body: SafeArea(
         child: Column(
@@ -101,7 +104,7 @@ class _SelectedCalendarItemAndroidState
                   ),
                 ),
               ),
-              onPressed: Format.isAcceptTime == true
+              onPressed: Hive.box("settings").get("saufiAktiviert") == false
                   ? () {
                       if (HiveHelper.isIdSet) {
                         showCupertinoModalPopup(
@@ -112,27 +115,74 @@ class _SelectedCalendarItemAndroidState
                           await TerminAbstimmungApi.addOrUpdateTerminAbstimmung(
                               value, args);
 
+                          if (value == "delete") {
+                            //delete Termin
+
+                            var allCalendars = await CalendarHelper()
+                                .lookAllCalendarsForTheEntrie(args);
+                          }
+
+                          if (value == "add") {
+                            var m = await CalendarHelper().loadAllCalendars();
+
+                            if (m != null && m.isNotEmpty) {
+                              List<Widget> actions = [];
+                              m.forEach((element) {
+                                if (element.name != null) {
+                                  actions.add(
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, element.id);
+                                      },
+                                      child: Text("${element.name}"),
+                                    ),
+                                  );
+                                }
+                              });
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CupertinoActionSheet(
+                                  title: const Text("Welcher Kalender"),
+                                  message: const Text("Kalender auswählen"),
+                                  actions: actions,
+                                  cancelButton: CupertinoActionSheetAction(
+                                    onPressed: () {
+                                      Navigator.pop(context, "cancel");
+                                    },
+                                    child: const Text("Abbrechen"),
+                                    isDefaultAction: true,
+                                  ),
+                                ),
+                              ).then((value) async {
+                                //! wtesten nur wen even sto
+                                await CalendarHelper().addEvent(args, value);
+                              });
+                            }
+                          }
+
                           refresh();
                         });
                       } else {
                         AndroidAlertDialogCustom.showAlertDialog(
-                            "Fehler",
-                            "Bevor sie eine Terminabstimmung abgeben können, müssen sie erst einen Namen definieren",
-                            context, [
-                          TextButton(
-                            child: Text("Ok"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          TextButton(
-                            child: Text("Einstellungen"),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(SettingsPage.routeName);
-                            },
-                          )
-                        ]);
+                          "Fehler",
+                          "Bevor sie eine Terminabstimmung abgeben können, müssen sie erst einen Namen definieren",
+                          context,
+                          [
+                            TextButton(
+                              child: Text("Ok"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            TextButton(
+                              child: Text("Einstellungen"),
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed(SettingsPage.routeName);
+                              },
+                            )
+                          ],
+                        );
                         //name muss gesetzt werden
                       }
                     }
@@ -149,9 +199,12 @@ class _SelectedCalendarItemAndroidState
               ),
             ),
             //SwitchTest(actTermin: args),
+            LinearProgressIndicatorCustom(terminId: args.id),
 
-            MitgliederViewAndroid(
-              id: args.id,
+            Expanded(
+              child: MitgliederViewAndroid(
+                id: args.id,
+              ),
             ),
           ],
         ),

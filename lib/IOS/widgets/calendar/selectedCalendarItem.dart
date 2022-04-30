@@ -1,4 +1,6 @@
 import 'package:boeoeg_app/IOS/Pages/settingsPage.dart';
+import 'package:boeoeg_app/IOS/Pages/adminView.dart';
+import 'package:boeoeg_app/IOS/widgets/calendar/showAcceptedNotAccepted.dart';
 import 'package:boeoeg_app/IOS/widgets/cupertinoAlertDialogCustom.dart';
 import 'package:boeoeg_app/classes/Api/notification.api.dart';
 import 'package:boeoeg_app/classes/Models/termin.dart';
@@ -6,6 +8,8 @@ import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoActionSheetCustom.dart'
 import 'package:boeoeg_app/IOS/widgets/calendar/cupertinoListTile.dart';
 import 'package:boeoeg_app/IOS/widgets/mitgliederView.dart';
 import 'package:boeoeg_app/IOS/widgets/calendar/notizwidget.dart';
+import 'package:boeoeg_app/classes/calendarHelper.dart';
+import 'package:boeoeg_app/classes/constants/constants.dart';
 import 'package:boeoeg_app/classes/format.dart';
 import 'package:boeoeg_app/classes/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +46,15 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        trailing: Constants.isAdmin
+            ? CupertinoButton(
+                child: Icon(CupertinoIcons.settings),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(AdminView.routeName, arguments: args.id);
+                },
+              )
+            : null,
         middle: Text(
           args.name,
           style: const TextStyle(
@@ -85,7 +98,7 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
                       )
                     : const Text("Saufmodus aktiviert"),
               ),
-              onPressed: Format.isAcceptTime == true
+              onPressed: Hive.box("settings").get("saufiAktiviert") == false
                   ? () {
                       if (HiveHelper.isIdSet) {
                         showCupertinoModalPopup(
@@ -97,6 +110,53 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
                             if (HiveHelper.isIdSet) {
                               await TerminAbstimmungApi
                                   .addOrUpdateTerminAbstimmung(value, args);
+
+                              if (value == "delete") {
+                                //delete Termin
+
+                                var allCalendars = await CalendarHelper()
+                                    .lookAllCalendarsForTheEntrie(args);
+                              }
+
+                              if (value == "add") {
+                                var m =
+                                    await CalendarHelper().loadAllCalendars();
+
+                                if (m.length != 0 > 0) {
+                                  List<Widget> actions = [];
+                                  m.forEach((element) {
+                                    actions.add(
+                                      CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          Navigator.pop(context, element.id);
+                                        },
+                                        child: Text("${element.name}"),
+                                      ),
+                                    );
+                                  });
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) => CupertinoActionSheet(
+                                      title: const Text("Welcher Kalender"),
+                                      message: const Text("Kalender auswählen"),
+                                      actions: actions,
+                                      cancelButton: CupertinoActionSheetAction(
+                                        onPressed: () {
+                                          Navigator.pop(context, "cancel");
+                                        },
+                                        child: const Text("Abbrechen"),
+                                        isDefaultAction: true,
+                                      ),
+                                    ),
+                                  ).then((value) async {
+                                    print(value);
+                                    //! wtesten nur wen even sto
+                                    await CalendarHelper()
+                                        .addEvent(args, value);
+                                  });
+                                }
+                              }
+
                               setState(() {});
                               refresh();
                             }
@@ -127,15 +187,9 @@ class _SelectedCalendarItemState extends State<SelectedCalendarItem> {
                     }
                   : null,
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Liste aller Zusagen:",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ShowAcceptedNotAccepted(terminId: args.id),
             ),
             Expanded(
               child: MitgliederView(

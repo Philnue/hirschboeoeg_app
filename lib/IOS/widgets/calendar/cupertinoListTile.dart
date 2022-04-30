@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CupertinoListTile extends StatefulWidget {
@@ -32,7 +31,7 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
         children: [
           SizedBox(
             width: width * 0.1,
-            height: 30,
+            height: 25,
             child: FittedBox(
               fit: BoxFit.contain,
               child: Icon(
@@ -43,7 +42,7 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
           const SizedBox(width: 10),
           SizedBox(
             width: width * 0.3,
-            height: 30,
+            height: 25,
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(
@@ -57,11 +56,13 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
           const SizedBox(width: 10),
           SizedBox(
             width: width * 0.5,
-            height: 30,
+            height: 25,
             child: FittedBox(
                 fit: BoxFit.contain,
-                child: Text(
-                  widget.trailing,
+                child: Align(
+                  child: Text(
+                    widget.trailing,
+                  ),
                 )),
           ),
         ],
