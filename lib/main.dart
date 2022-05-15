@@ -1,20 +1,15 @@
-import 'package:boeoeg_app/MyHomePageAndroid.dart';
-import 'package:boeoeg_app/MyHomePageIOS.dart';
-import 'package:boeoeg_app/classes/Api/notification.api.dart';
-import 'package:boeoeg_app/classes/Models/mitglied.dart';
-import 'package:boeoeg_app/classes/Models/termin.dart';
-import 'package:boeoeg_app/classes/calendarHelper.dart';
-import 'package:boeoeg_app/classes/constants/constants.dart';
-import 'package:boeoeg_app/classes/Api/mitglied.api.dart';
-import 'package:boeoeg_app/classes/hiveHelper.dart';
-import 'package:device_calendar/device_calendar.dart';
+import 'package:cliquenpackage/init.dart';
+import 'package:cliquenpackage/platform/Android/MyHomePageAndroid.dart';
+import 'package:cliquenpackage/platform/IOS/MyHomePageIOS.dart';
+import 'package:cliquenpackage/utils/Api/mitglied.api.dart';
+import 'package:cliquenpackage/utils/Models/mitglied.dart';
+import 'package:cliquenpackage/utils/calendarHelper.dart';
+import 'package:cliquenpackage/utils/constants/allConstants.dart';
+import 'package:cliquenpackage/utils/hiveHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io' show Platform;
-
-import 'IOS/widgets/calendar/selectedCalendarItem.dart';
-import 'classes/Api/termin.api.dart';
 
 //void main() => runApp(MyApp());
 
@@ -22,35 +17,26 @@ void main() async {
   try {
     await Hive.initFlutter();
     await Hive.openBox('settings');
+    // await Hive.box("settings")
+    //     .put("connection", "http://vxf7ds3aa3ppmrja.myfritz.net:43333/");
+
+    var aemterMap = [
+      {"Amt": "Alpha        ", "Name": "Daniel Lauer"},
+      {"Amt": "Beta         ", "Name": "Philipp Nüßlein"},
+      {"Amt": "Schriftführer", "Name": "Dennis Hofmann"},
+      {"Amt": "Finanzen     ", "Name": "Uwe Ziefle"},
+      {"Amt": "Alles     ", "Name": "Uwe Ziefle"},
+    ];
+
+    //herten http://vxf7ds3aa3ppmrja.myfritz.net:43333/
+    //"http://t0orznhg4raqbvfi.myfritz.net:43333/";
+    Init(
+        adminList: [1, 2, 4, 5],
+        aemterList: aemterMap,
+        connection: "http://vxf7ds3aa3ppmrja.myfritz.net:43333/");
 
     await CalendarHelper();
 
-    // var t = await CalendarHelper().loadData();
-
-    // List<Termin> liste = [
-    //   Termin(
-    //       id: 1,
-    //       name: "name1",
-    //       datum: "datum1",
-    //       adresse: "adresse1",
-    //       uhrzeit: "uhrzeit1",
-    //       notizen: "notizen1",
-    //       treffpunkt: "treffpunkt1",
-    //       kleidung: "kleidung"),
-    //   Termin(
-    //       id: 2,
-    //       name: "name2",
-    //       datum: "datum2",
-    //       adresse: "adresse2",
-    //       uhrzeit: "uhrzeit2",
-    //       notizen: "notizen2",
-    //       treffpunkt: "treffpunkt2",
-    //       kleidung: "kleidung2")
-    // ];
-
-    // await Hive.box("settings").put("test", liste);
-
-    //String? name = await Hive.box("settings").get("name");
     var crrName = HiveHelper.currentName;
     //! ändern
     // if (name == null) {
@@ -126,6 +112,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     //! connected internet ?
     //! Alerts :
 
+    var t = AllConstants.fritzBoxConnection;
     return isIOS
         ? MyHomePageIOS(mybrightness: _brightness)
         : MyHomePageAndroid(mybrightness: _brightness);
