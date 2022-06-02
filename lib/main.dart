@@ -25,7 +25,6 @@ void main() async {
       {"Amt": "Beta         ", "Name": "Philipp Nüßlein"},
       {"Amt": "Schriftführer", "Name": "Dennis Hofmann"},
       {"Amt": "Finanzen     ", "Name": "Uwe Ziefle"},
-      {"Amt": "Alles     ", "Name": "Uwe Ziefle"},
     ];
 
     //herten http://vxf7ds3aa3ppmrja.myfritz.net:43333/
@@ -56,6 +55,8 @@ void main() async {
 
       print("crrPersonId = ${currentMitglied.id} ");
       print("crrSpitzname = ${currentMitglied.spitzName} ");
+
+      HiveHelper.terminList();
     } else {
       await Hive.box("settings").put("id", 0);
     }
@@ -80,8 +81,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
-    _brightness = WidgetsBinding.instance?.window.platformBrightness;
+    WidgetsBinding.instance.addObserver(this);
+    _brightness = WidgetsBinding.instance.window.platformBrightness;
 
     // NotificationApi.init();
 
@@ -90,7 +91,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangePlatformBrightness() {
     if (mounted) {
       setState(() {
-        _brightness = WidgetsBinding.instance?.window.platformBrightness;
+        _brightness = WidgetsBinding.instance.window.platformBrightness;
       });
     }
 
