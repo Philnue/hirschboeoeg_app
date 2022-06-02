@@ -23,7 +23,7 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   device_calendar: ^4.2.0
   cliquenpackage:
-    path: ../../cliquenpackage
+    path: ../cliquenpackage
     
   #path_provider: ^2.0.9
 
